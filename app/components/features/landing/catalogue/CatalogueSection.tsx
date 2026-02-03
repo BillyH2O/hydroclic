@@ -14,7 +14,7 @@ interface CatalogueData {
 export const CatalogueSection = () => {
   const catalogueDataItems = Object.values(catalogueData) as CatalogueData[]
   return (
-    <div className="w-full bg-blue-50 overflow-x-hidden">
+    <div className="w-full bg-gradient-to-b from-blue-100 to-white overflow-x-hidden">
     <div className="w-full flex flex-col items-start justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-8 sm:gap-10 md:gap-12">
       <Badge label="Catalogue"/>
       <Description title="Nos catégories de produits" description="Découvrez une gamme complète pour tous vos projets en plomberie : de la distribution d'eau à la régulation thermique." />

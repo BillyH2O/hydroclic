@@ -89,7 +89,17 @@ export async function POST(request: NextRequest) {
 
                   // Si pas trouvé dans les metadata, chercher par nom
                   if (!productId) {
-                    const productName = lineItem.description || lineItem.price?.product?.name || 'Produit'
+                    // Extraire le nom du produit de manière sûre
+                    let productName: string = lineItem.description || 'Produit'
+                    
+                    const productObject = lineItem.price?.product
+                    if (productObject && typeof productObject === 'object' && 'name' in productObject) {
+                      const stripeProduct = productObject as Stripe.Product
+                      if (stripeProduct.name) {
+                        productName = stripeProduct.name
+                      }
+                    }
+                    
                     try {
                       const product = await prisma.product.findFirst({
                         where: {

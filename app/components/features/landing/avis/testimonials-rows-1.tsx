@@ -2,9 +2,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import type { TestimonialItem } from "@/hooks/useTestimonials";
 
-
+export type TestimonialItem = {
+  text: string;
+  image: string;
+  name: string;
+  role: string;
+};
 export const TestimonialsRow = (props: {
   className?: string;
   testimonials: TestimonialItem[];

@@ -17,7 +17,7 @@ export class PaymentService {
         throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
       }
       this.stripe = new Stripe(secretKey, {
-        apiVersion: '2024-11-20.acacia',
+        apiVersion: '2025-11-17.clover',
       })
     }
     return this.stripe
@@ -64,6 +64,16 @@ export class PaymentService {
       }
     })
 
+    // Convertir les métadonnées pour Stripe (filtrer les undefined)
+    const stripeMetadata: Stripe.MetadataParam = {}
+    if (metadata) {
+      Object.entries(metadata).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          stripeMetadata[key] = value
+        }
+      })
+    }
+
     // Créer la session de checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -72,7 +82,7 @@ export class PaymentService {
       success_url: data.successUrl,
       cancel_url: data.cancelUrl,
       customer_email: data.customerEmail,
-      metadata: metadata || {},
+      metadata: Object.keys(stripeMetadata).length > 0 ? stripeMetadata : undefined,
       locale: 'fr',
       currency: 'eur',
     })

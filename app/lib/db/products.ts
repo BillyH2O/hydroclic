@@ -13,9 +13,9 @@ function mapDbProductToProduct(dbProduct: DbProduct): Product {
     name: dbProduct.name,
     slug: dbProduct.slug || undefined,
     sku: dbProduct.sku || undefined,
-    priceB2C: dbProduct.priceB2C ?? dbProduct.price ?? 0, // Fallback pour migration
-    priceB2B: dbProduct.priceB2B ?? dbProduct.price ?? 0, // Fallback pour migration
-    price: dbProduct.priceB2C ?? dbProduct.price ?? 0, // Prix par défaut (B2C) pour compatibilité
+    priceB2C: dbProduct.priceB2C ?? 0,
+    priceB2B: dbProduct.priceB2B ?? 0,
+    price: dbProduct.priceB2C ?? 0, // Prix par défaut (B2C) pour compatibilité
     image: getProductImage(dbProduct.image),
     imageAlt: dbProduct.imageAlt || dbProduct.name,
     href: dbProduct.slug ? `/produit/${dbProduct.slug}` : `/produit/${dbProduct.id}`,

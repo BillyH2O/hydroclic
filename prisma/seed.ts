@@ -19,7 +19,6 @@ async function main() {
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
       priceB2C: 3.984,
       priceB2B: 3.5856, // 90% du prix B2C
-      priceB2B: 3.5856, // 90% du prix B2C
       image: '/produit-1.png',
       imageAlt: 'Coude Cuivre à Sertir Ø22',
       category: 'nouveaute',
@@ -33,7 +32,6 @@ async function main() {
       slug: 'coude-cuivre-a-sertir-28',
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.',
       priceB2C: 5.568,
-      priceB2B: 5.0112, // 90% du prix B2C
       priceB2B: 5.0112, // 90% du prix B2C
       image: '/produit-2.png',
       imageAlt: 'Coude Cuivre à Sertir Ø28',

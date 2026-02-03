@@ -71,25 +71,32 @@ export default function ContactForm() {
       console.error('Unexpected error in ContactForm:', error)
       
       // Ignorer les erreurs de redirection Next.js (comme dans DeleteAccountButton)
-      if (typeof error === 'object' && error !== null && 'digest' in error && typeof (error as Record<string, unknown>).digest === 'string' && (error as Record<string, unknown>).digest.startsWith('NEXT_REDIRECT')) {
-        setIsSubmitting(false)
-        return
+      if (typeof error === 'object' && error !== null && 'digest' in error) {
+        const errorWithDigest = error as { digest?: unknown }
+        if (typeof errorWithDigest.digest === 'string' && errorWithDigest.digest.startsWith('NEXT_REDIRECT')) {
+          setIsSubmitting(false)
+          return
+        }
       }
       
       // Si l'erreur contient un message indiquant que c'est une erreur de sérialisation Next.js,
       // ne pas afficher d'erreur car l'action serveur a probablement réussi
-      if (error?.message?.includes('serialize') || error?.message?.includes('NEXT_')) {
-        // L'email a probablement été envoyé avec succès, mais Next.js a eu un problème de sérialisation
-        setSuccess(true)
-        setErrors({})
-        setErrorMessage(null)
-        // Réinitialiser le formulaire en utilisant la ref
-        if (formRef.current) {
-          formRef.current.reset()
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorWithMessage = error as { message?: unknown }
+        const errorMessage = typeof errorWithMessage.message === 'string' ? errorWithMessage.message : ''
+        if (errorMessage.includes('serialize') || errorMessage.includes('NEXT_')) {
+          // L'email a probablement été envoyé avec succès, mais Next.js a eu un problème de sérialisation
+          setSuccess(true)
+          setErrors({})
+          setErrorMessage(null)
+          // Réinitialiser le formulaire en utilisant la ref
+          if (formRef.current) {
+            formRef.current.reset()
+          }
+          setTimeout(() => setSuccess(false), 5000)
+          setIsSubmitting(false)
+          return
         }
-        setTimeout(() => setSuccess(false), 5000)
-        setIsSubmitting(false)
-        return
       }
       
       setSuccess(false)

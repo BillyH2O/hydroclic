@@ -22,9 +22,6 @@ export default async function SignInPage() {
             afterSignInUrl="/onboarding/check"
             fallbackRedirectUrl="/onboarding/check"
             forceRedirectUrl="/onboarding/check"
-            localization={{
-              locale: 'fr-FR',
-            }}
             appearance={{
               elements: {
                 rootBox: "mx-auto w-full",
