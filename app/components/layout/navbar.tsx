@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { MenuIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -12,6 +13,14 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -34,12 +43,34 @@ type NavbarProps = {
   noMarginBottom?: boolean
 }
 
+const PRODUCT_TYPE_OPTIONS = [
+  { value: 'all', label: 'Tous les produits' },
+  { value: 'hydrodistribution', label: 'Hydrodistribution' },
+  { value: 'sanitaire', label: 'Sanitaire' },
+  { value: 'chauffage-climatisation', label: 'Chauffage & Climatisation' },
+  { value: 'traitement-eau', label: 'Traitement de l\'eau' },
+  { value: 'outillage', label: 'Outillage' },
+  { value: 'consommable', label: 'Consommable' },
+];
+
 export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isSignedIn } = useUser();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Récupérer le type de produit depuis l'URL
+  const currentProductType = searchParams?.get('productType') || 'all';
+  const [selectedProductType, setSelectedProductType] = useState<string>(currentProductType);
+  
+  // Mettre à jour le state quand l'URL change
+  useEffect(() => {
+    const productType = searchParams?.get('productType') || 'all';
+    setSelectedProductType(productType);
+  }, [searchParams]);
 
   useEffect(() => {
     // Utiliser setTimeout pour éviter l'appel synchrone de setState
@@ -83,43 +114,76 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
           </a>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
-              {navbarData.menuItems.map((item, index) => (
-                <NavigationMenuItem key={index}>
-                  {item.hasDropdown ? (
-                    <>
-                      <NavigationMenuTrigger className={`text-lg! bg-transparent hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-[state=open]:bg-transparent transition-colors duration-300 ${
-                        isSolid ? "text-foreground" : "text-white"
-                      }`}>
-                        {item.label}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent className="bg-popover border shadow-md">
-                        <div className="grid w-[400px] grid-cols-1 p-4">
-                          {item.dropdownItems?.map((dropdownItem, idx) => (
-                            <NavigationMenuLink
-                              key={idx}
-                              href={dropdownItem.href}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="text-sm font-medium leading-none">
-                                {dropdownItem.label}
-                              </div>
-                            </NavigationMenuLink>
+              {navbarData.menuItems.map((item, index) => {
+                // Remplacer le dropdown Catalogue par un Select
+                if (item.label === "Catalogue" && item.hasDropdown) {
+                  return (
+                    <NavigationMenuItem key={index}>
+                      <Select
+                        value={selectedProductType}
+                        onValueChange={(value) => {
+                          setSelectedProductType(value);
+                          const url = value === 'all' 
+                            ? '/catalogue' 
+                            : `/catalogue?productType=${value}`;
+                          router.push(url);
+                        }}
+                      >
+                        <SelectTrigger className={`w-[200px] text-base bg-transparent hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 ${
+                          isSolid ? "text-foreground" : "text-white"
+                        }`}>
+                          <SelectValue placeholder="Catalogue" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {PRODUCT_TYPE_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
                           ))}
-                        </div>
-                      </NavigationMenuContent>
-                    </>
-                  ) : (
-                    <NavigationMenuLink
-                      href={item.href}
-                      className={`${navigationMenuTriggerStyle()} text-lg! bg-transparent hover:bg-transparent focus:bg-transparent data-active:bg-transparent transition-colors duration-300 ${
-                        isSolid ? "text-foreground" : "text-white"
-                      }`}
-                    >
-                      {item.label}
-                    </NavigationMenuLink>
-                  )}
-                </NavigationMenuItem>
-              ))}
+                        </SelectContent>
+                      </Select>
+                    </NavigationMenuItem>
+                  );
+                }
+                
+                return (
+                  <NavigationMenuItem key={index}>
+                    {item.hasDropdown ? (
+                      <>
+                        <NavigationMenuTrigger className={`text-lg! bg-transparent hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-[state=open]:bg-transparent transition-colors duration-300 ${
+                          isSolid ? "text-foreground" : "text-white"
+                        }`}>
+                          {item.label}
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent className="bg-popover border shadow-md">
+                          <div className="grid w-[400px] grid-cols-1 p-4">
+                            {item.dropdownItems?.map((dropdownItem, idx) => (
+                              <NavigationMenuLink
+                                key={idx}
+                                href={dropdownItem.href}
+                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              >
+                                <div className="text-sm font-medium leading-none">
+                                  {dropdownItem.label}
+                                </div>
+                              </NavigationMenuLink>
+                            ))}
+                          </div>
+                        </NavigationMenuContent>
+                      </>
+                    ) : (
+                      <NavigationMenuLink
+                        href={item.href}
+                        className={`${navigationMenuTriggerStyle()} text-lg! bg-transparent hover:bg-transparent focus:bg-transparent data-active:bg-transparent transition-colors duration-300 ${
+                          isSolid ? "text-foreground" : "text-white"
+                        }`}
+                      >
+                        {item.label}
+                      </NavigationMenuLink>
+                    )}
+                  </NavigationMenuItem>
+                );
+              })}
             </NavigationMenuList>
           </NavigationMenu>
           </div>

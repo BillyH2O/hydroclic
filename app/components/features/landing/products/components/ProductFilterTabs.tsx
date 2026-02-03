@@ -22,7 +22,7 @@ const ProductFilterTabs: React.FC<ProductFilterTabsProps> = ({
   className = '',
 }) => {
   return (
-    <div className={cn('flex flex-wrap items-start justify-start sm:justify-end gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto', className)}>
+    <div className={cn('flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto', className)}>
       {tabs.map((tab) => (
         <button
           key={tab.id}

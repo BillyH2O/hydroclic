@@ -44,6 +44,14 @@ export function Footer({ className, ...props }: StickyFooterProps) {
 								<p className="text-zinc-700 mt-8 text-sm md:mt-0 lg:w-42">
 									{footerData.description}
 								</p>
+								<div className="flex flex-col gap-2 text-sm text-zinc-600">
+									<a href={`mailto:${footerData.contact.email}`} className="hover:text-blue-600 transition-colors">
+										{footerData.contact.email}
+									</a>
+									<a href={`tel:${footerData.contact.phone.replace(/\s/g, '')}`} className="hover:text-blue-600 transition-colors">
+										{footerData.contact.phone}
+									</a>
+								</div>
 								<div className="flex gap-2">
 									{footerData.socialLinks.map((link) => {
 										const IconComponent = {
