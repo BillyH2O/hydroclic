@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { MenuIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -53,12 +53,8 @@ const PRODUCT_TYPE_OPTIONS = [
   { value: 'consommable', label: 'Consommable' },
 ];
 
-export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isSignedIn } = useUser();
+// Composant séparé pour le Select du catalogue qui utilise useSearchParams
+function CatalogueSelect({ isSolid }: { isSolid: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -71,6 +67,40 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
     const productType = searchParams?.get('productType') || 'all';
     setSelectedProductType(productType);
   }, [searchParams]);
+
+  return (
+    <Select
+      value={selectedProductType}
+      onValueChange={(value) => {
+        setSelectedProductType(value);
+        const url = value === 'all' 
+          ? '/catalogue' 
+          : `/catalogue?productType=${value}`;
+        router.push(url);
+      }}
+    >
+      <SelectTrigger className={`w-[200px] text-base bg-transparent hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 ${
+        isSolid ? "text-foreground" : "text-white"
+      }`}>
+        <SelectValue placeholder="Catalogue" />
+      </SelectTrigger>
+      <SelectContent>
+        {PRODUCT_TYPE_OPTIONS.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     // Utiliser setTimeout pour éviter l'appel synchrone de setState
@@ -119,29 +149,15 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
                 if (item.label === "Catalogue" && item.hasDropdown) {
                   return (
                     <NavigationMenuItem key={index}>
-                      <Select
-                        value={selectedProductType}
-                        onValueChange={(value) => {
-                          setSelectedProductType(value);
-                          const url = value === 'all' 
-                            ? '/catalogue' 
-                            : `/catalogue?productType=${value}`;
-                          router.push(url);
-                        }}
-                      >
-                        <SelectTrigger className={`w-[200px] text-base bg-transparent hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 ${
+                      <Suspense fallback={
+                        <div className={`w-[200px] h-10 flex items-center justify-center text-base ${
                           isSolid ? "text-foreground" : "text-white"
                         }`}>
-                          <SelectValue placeholder="Catalogue" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {PRODUCT_TYPE_OPTIONS.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                          Catalogue
+                        </div>
+                      }>
+                        <CatalogueSelect isSolid={isSolid} />
+                      </Suspense>
                     </NavigationMenuItem>
                   );
                 }
