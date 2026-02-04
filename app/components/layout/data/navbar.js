@@ -46,26 +46,6 @@ export const navbarData = {
       href: "/catalogue",
     },
     {
-      label: "Hydrodistribution",
-      href: "/catalogue?productType=hydrodistribution",
-    },
-    {
-      label: "Sanitaire",
-      href: "/catalogue?productType=sanitaire",
-    },
-    {
-      label: "Chauffage & Climatisation",
-      href: "/catalogue?productType=chauffage-climatisation",
-    },
-    {
-      label: "Outillage",
-      href: "/catalogue?productType=outillage",
-    },
-    {
-      label: "Consommable",
-      href: "/catalogue?productType=consommable",
-    },
-    {
       label: "Promotions",
       href: "/catalogue?offer=promotion",
     },
