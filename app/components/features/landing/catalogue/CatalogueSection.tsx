@@ -15,7 +15,7 @@ export const CatalogueSection = () => {
   const catalogueDataItems = Object.values(catalogueData) as CatalogueData[]
   return (
     <div className="w-full bg-gradient-to-b from-blue-100 to-white overflow-x-hidden">
-    <div className="w-full flex flex-col items-start justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-8 sm:gap-10 md:gap-12">
+    <div className="w-full max-w-7xl mx-auto flex flex-col items-start justify-center px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-8 sm:gap-10 md:gap-12">
       <Badge label="Catalogue"/>
       <Description title="Nos catégories de produits" description="Découvrez une gamme complète pour tous vos projets en plomberie : de la distribution d'eau à la régulation thermique." />
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 lg:grid-rows-4 gap-4 md:gap-6 auto-rows-fr">

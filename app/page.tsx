@@ -58,7 +58,7 @@ export default async function Home() {
         <AboutSection title="À propos de nous" description="Tubes, raccords, vannes, collecteurs… tout pour une distribution d'eau performante, fiable et conforme aux normes en vigueur. Tubes, raccords, vannes, collecteurs… tout pour une distribution d'eau performante, fiable et conforme aux normes en vigueur.Tubes, raccords, vannes, collecteurs… tout pour une distribution d'eau performante, fiable et conforme aux normes en vigueur." imageSrc="/plombier.png" imageAlt="À propos de nous" />
         <TestimonialSection />
         <UpsellSection />
-        <Footer/  >
+        <Footer />
     </div>
     </div>
   );

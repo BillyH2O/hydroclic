@@ -16,29 +16,33 @@ const CatalogueCard = ({ index, title, description, image, imageAlt, buttonLabel
   return (
     <div 
       key={`catalogue-${index}`} 
-      className="bg-white col-span-1 sm:col-span-1 lg:col-span-2 row-span-1 lg:row-span-2 bg-gradient-to-b from-blue-50 from-70% to-[#F5F9FF] to-100% rounded-lg border-2 border-gray-300 hover:border-primary transition-colors duration-200 min-h-[200px] sm:min-h-[240px] md:min-h-[280px] lg:min-h-0 overflow-hidden relative"
+      className="bg-white col-span-1 sm:col-span-1 lg:col-span-2 row-span-1 lg:row-span-2 bg-gradient-to-b from-blue-50 from-70% to-[#F5F9FF] to-100% rounded-lg border-2 border-gray-300 hover:border-primary transition-colors duration-200 min-h-[200px] sm:min-h-[240px] md:min-h-[260px] lg:min-h-[260px] overflow-hidden"
     >
-      {/* Image - Collée au bord gauche et au bas, sans padding */}
-      <div className="absolute left-0 bottom-0 shrink-0 w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64 h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 flex items-end justify-start z-0">
-        <Image 
-          src={image} 
-          alt={imageAlt} 
-          width={300} 
-          height={300} 
-          className="object-contain w-full h-full" 
-        />
-      </div>
-      
-      {/* Content - Toujours à droite avec padding */}
-      <div className="relative flex flex-col items-end justify-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 h-full w-full min-w-0 z-10 pr-3 sm:pr-4 md:pr-5 lg:pr-6 pl-36 sm:pl-44 md:pl-52 lg:pl-60 xl:pl-72">
-        <h3 className="text-right text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 break-words">
-          {title}
-        </h3>
-        <p className="text-right text-xs sm:text-sm md:text-base text-gray-600 break-words">
-          {description}
-        </p>
-        <div className="flex justify-end mt-1 sm:mt-0">
-          <Button label={buttonLabel} size="sm" variant="primary" href={buttonHref} />
+      <div className="flex h-full min-h-[inherit] flex-row items-stretch gap-0">
+        {/* Image : collée au bord gauche du cadre, aucun padding / marge */}
+        <div className="m-0 flex shrink-0 items-end justify-start self-stretch p-0">
+          <div className="relative m-0 h-32 w-32 p-0 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48">
+            <Image
+              src={image}
+              alt={imageAlt}
+              fill
+              sizes="(max-width: 640px) 128px, (max-width: 768px) 144px, (max-width: 1024px) 160px, (max-width: 1280px) 176px, 192px"
+              className="object-contain object-bottom-left"
+            />
+          </div>
+        </div>
+
+        {/* Texte : zone dédiée (min-w-0) pour ne jamais empiéter sur l’image ; padding uniquement à droite / vertical */}
+        <div className="flex min-w-0 min-h-0 flex-1 flex-col items-end justify-center gap-2 overflow-hidden pt-2 pr-3 pb-2 pl-0 sm:gap-2 sm:pt-3 sm:pr-4 sm:pb-3 md:pr-5 lg:gap-2.5 lg:pr-6">
+          <h3 className="w-full max-w-full text-right text-lg font-bold leading-snug text-gray-900 sm:text-xl md:text-xl lg:text-2xl wrap-anywhere hyphens-auto">
+            {title}
+          </h3>
+          <p className="w-full max-w-full text-right text-sm leading-relaxed text-gray-600 sm:text-base wrap-anywhere hyphens-auto">
+            {description}
+          </p>
+          <div className="flex w-full justify-end pt-0.5 sm:pt-1">
+            <Button label={buttonLabel} size="sm" variant="primary" href={buttonHref} />
+          </div>
         </div>
       </div>
     </div>

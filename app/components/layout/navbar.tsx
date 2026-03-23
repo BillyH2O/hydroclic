@@ -44,7 +44,7 @@ type NavbarProps = {
 }
 
 const PRODUCT_TYPE_OPTIONS = [
-  { value: 'all', label: 'Tous les produits' },
+  { value: 'all', label: 'Catalogue' },
   { value: 'hydrodistribution', label: 'Hydrodistribution' },
   { value: 'sanitaire', label: 'Sanitaire' },
   { value: 'chauffage-climatisation', label: 'Chauffage & Climatisation' },
@@ -79,9 +79,11 @@ function CatalogueSelect({ isSolid }: { isSolid: boolean }) {
         router.push(url);
       }}
     >
-      <SelectTrigger className={`w-[200px] text-base bg-transparent hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 ${
-        isSolid ? "text-foreground" : "text-white"
-      }`}>
+      <SelectTrigger
+        className={`h-10 w-max min-w-0 justify-start gap-1 px-4 py-2 text-lg font-medium leading-none bg-transparent hover:bg-transparent focus:bg-transparent data-placeholder:text-inherit border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 [&_svg]:h-3 [&_svg]:w-3 [&_svg]:shrink-0 [&_svg]:opacity-80 ${
+          isSolid ? "text-foreground" : "text-white"
+        }`}
+      >
         <SelectValue placeholder="Catalogue" />
       </SelectTrigger>
       <SelectContent>
@@ -150,9 +152,11 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
                   return (
                     <NavigationMenuItem key={index}>
                       <Suspense fallback={
-                        <div className={`w-[200px] h-10 flex items-center justify-center text-base ${
-                          isSolid ? "text-foreground" : "text-white"
-                        }`}>
+                        <div
+                          className={`h-10 w-max px-4 flex items-center text-lg font-medium leading-none ${
+                            isSolid ? "text-foreground" : "text-white"
+                          }`}
+                        >
                           Catalogue
                         </div>
                       }>

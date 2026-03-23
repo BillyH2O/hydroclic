@@ -22,16 +22,19 @@ export function Footer({ className, ...props }: StickyFooterProps) {
 			{...props}
 		>
 			<div className="bottom-0 lg:h-[420px] h-[820px] w-full pb-8">
-				<div className="sticky top-[calc(100vh-lg:420px)] h-full overflow-y-auto ">
-					<div className="relative flex size-full flex-col justify-between gap-0 border-t border-zinc-200 px-4 py-8 md:px-12">
+				<div className="sticky top-[calc(100vh-lg:420px)] h-full overflow-hidden">
+					{/* Pleine largeur : fond et dégradés uniformes sur toute la zone du footer */}
+					<div className="relative flex min-h-full w-full flex-col justify-between gap-0 border-t border-zinc-200">
 						<div
 							aria-hidden
-							className="absolute inset-0 isolate z-0 contain-strict"
+							className="pointer-events-none absolute inset-0 isolate z-0 contain-strict"
 						>
 							<div className="bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(59,130,246,0.06)_0,hsla(0,0%,55%,.02)_50%,rgba(59,130,246,0.01)_80%)] absolute top-0 left-0 h-320 w-140 -translate-y-87.5 -rotate-45 rounded-full" />
 							<div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(59,130,246,0.04)_0,rgba(59,130,246,0.01)_80%,transparent_100%)] absolute top-0 left-0 h-320 w-60 [translate:5%_-50%] -rotate-45 rounded-full" />
 							<div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(59,130,246,0.04)_0,rgba(59,130,246,0.01)_80%,transparent_100%)] absolute top-0 left-0 h-320 w-60 -translate-y-87.5 -rotate-45 rounded-full" />
 						</div>
+						{/* Contenu aligné sur le même max-width que le reste de la landing */}
+						<div className="relative z-10 mx-auto flex min-h-full w-full max-w-7xl flex-col justify-between px-4 py-8 sm:px-6 lg:px-8">
 						<div className="mt-10 flex flex-col justify-center gap-6 lg:flex-row xl:mt-0">
 							<AnimatedContainer className="w-full space-y-4 flex flex-col justify-center items-center">
 								<Image
@@ -102,6 +105,7 @@ export function Footer({ className, ...props }: StickyFooterProps) {
 						</div>
 						<div className="text-zinc-700 flex flex-col items-center justify-between gap-2 border-t border-zinc-200 pt-2 text-sm md:flex-row">
 							<p>{footerData.copyright}</p>
+						</div>
 						</div>
 					</div>
 				</div>
