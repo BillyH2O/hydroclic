@@ -12,9 +12,20 @@ export class PaymentService {
    */
   private static getStripe(): Stripe {
     if (!this.stripe) {
-      const secretKey = process.env.STRIPE_SECRET_KEY
+      let secretKey = process.env.STRIPE_SECRET_KEY?.trim()
+      if (secretKey?.startsWith('"') && secretKey.endsWith('"')) {
+        secretKey = secretKey.slice(1, -1).trim()
+      }
+      if (secretKey?.startsWith("'") && secretKey.endsWith("'")) {
+        secretKey = secretKey.slice(1, -1).trim()
+      }
       if (!secretKey) {
         throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+      }
+      if (!secretKey.startsWith('sk_')) {
+        throw new Error(
+          'STRIPE_SECRET_KEY doit commencer par sk_test_ ou sk_live_ (clé secrète, pas la clé publique pk_)',
+        )
       }
       this.stripe = new Stripe(secretKey, {
         apiVersion: '2025-11-17.clover',

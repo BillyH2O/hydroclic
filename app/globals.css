@@ -4,7 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --primary: oklch(0.205 0 0);
+  /* Bleu marque Hydroclic : base pour text-primary, bg-primary, accent-primary, etc. */
+  --primary: #1986e3;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -96,12 +97,6 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: #1986e3;
-  }
-}
-
 body {
   font-family: var(--font-lexend), sans-serif;
 }
@@ -172,6 +167,6 @@ body {
 
   /* Exemple : Classe pour un bouton secondaire */
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-white text-primary font-semibold rounded-lg border-2 border-[#001E37]/10 hover:bg-blue-50 transition-colors duration-200 shadow-md hover:shadow-lg;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-white text-primary font-semibold rounded-lg border-2 border-[#001E37]/10 hover:bg-primary/5 transition-colors duration-200 shadow-md hover:shadow-lg;
   }
 }

@@ -2,6 +2,7 @@
 
 import { OfferFilter, ProductTypeFilter } from '@/lib/types/catalogue'
 import { ChevronDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface CatalogueSidebarProps {
   offerFilter: OfferFilter
@@ -48,7 +49,7 @@ export default function CatalogueSidebar({
               id="offer-filter-mobile"
               value={offerFilter}
               onChange={(e) => onOfferFilterChange(e.target.value as OfferFilter)}
-              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 w-full text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 w-full text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/40 cursor-pointer"
             >
               {OFFER_FILTERS.map((filter) => (
                 <option key={filter.value} value={filter.value}>
@@ -70,7 +71,7 @@ export default function CatalogueSidebar({
               id="product-type-filter-mobile"
               value={productTypeFilter}
               onChange={(e) => onProductTypeFilterChange(e.target.value as ProductTypeFilter)}
-              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 w-full text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+              className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 w-full text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/40 cursor-pointer"
             >
               {PRODUCT_TYPE_FILTERS.map((filter) => (
                 <option key={filter.value} value={filter.value}>
@@ -91,22 +92,32 @@ export default function CatalogueSidebar({
             Offres
           </h3>
           <div className="space-y-2">
-            {OFFER_FILTERS.map((filter) => (
+            {OFFER_FILTERS.map((filter) => {
+              const selected = offerFilter === filter.value
+              return (
               <label
                 key={filter.value}
-                className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                className={cn(
+                  'flex items-center gap-2 cursor-pointer rounded-md p-2 transition-colors',
+                  selected
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-gray-700 hover:bg-primary/5',
+                )}
               >
                 <input
                   type="radio"
                   name="offer-filter"
                   value={filter.value}
-                  checked={offerFilter === filter.value}
+                  checked={selected}
                   onChange={() => onOfferFilterChange(filter.value)}
-                  className="w-4 h-4 text-primary focus:ring-primary"
+                  className="h-4 w-4 shrink-0 border-gray-300 accent-primary focus:ring-2 focus:ring-primary focus:ring-offset-0"
                 />
-                <span className="text-sm text-gray-700">{filter.label}</span>
+                <span className={cn('text-sm', selected && 'font-semibold text-primary')}>
+                  {filter.label}
+                </span>
               </label>
-            ))}
+              )
+            })}
           </div>
         </div>
 
@@ -116,22 +127,32 @@ export default function CatalogueSidebar({
             Type de produit
           </h3>
           <div className="space-y-2">
-            {PRODUCT_TYPE_FILTERS.map((filter) => (
+            {PRODUCT_TYPE_FILTERS.map((filter) => {
+              const selected = productTypeFilter === filter.value
+              return (
               <label
                 key={filter.value}
-                className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                className={cn(
+                  'flex items-center gap-2 cursor-pointer rounded-md p-2 transition-colors',
+                  selected
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-gray-700 hover:bg-primary/5',
+                )}
               >
                 <input
                   type="radio"
                   name="product-type-filter"
                   value={filter.value}
-                  checked={productTypeFilter === filter.value}
+                  checked={selected}
                   onChange={() => onProductTypeFilterChange(filter.value)}
-                  className="w-4 h-4 text-primary focus:ring-primary"
+                  className="h-4 w-4 shrink-0 border-gray-300 accent-primary focus:ring-2 focus:ring-primary focus:ring-offset-0"
                 />
-                <span className="text-sm text-gray-700">{filter.label}</span>
+                <span className={cn('text-sm', selected && 'font-semibold text-primary')}>
+                  {filter.label}
+                </span>
               </label>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

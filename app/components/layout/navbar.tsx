@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { MenuIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -13,14 +12,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -41,60 +32,6 @@ import ContactIcon from "../features/contact/ContactIcon";
 type NavbarProps = {
   solid?: boolean
   noMarginBottom?: boolean
-}
-
-const PRODUCT_TYPE_OPTIONS = [
-  { value: 'all', label: 'Catalogue' },
-  { value: 'hydrodistribution', label: 'Hydrodistribution' },
-  { value: 'sanitaire', label: 'Sanitaire' },
-  { value: 'chauffage-climatisation', label: 'Chauffage & Climatisation' },
-  { value: 'traitement-eau', label: 'Traitement de l\'eau' },
-  { value: 'outillage', label: 'Outillage' },
-  { value: 'consommable', label: 'Consommable' },
-];
-
-// Composant séparé pour le Select du catalogue qui utilise useSearchParams
-function CatalogueSelect({ isSolid }: { isSolid: boolean }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  // Récupérer le type de produit depuis l'URL
-  const currentProductType = searchParams?.get('productType') || 'all';
-  const [selectedProductType, setSelectedProductType] = useState<string>(currentProductType);
-  
-  // Mettre à jour le state quand l'URL change
-  useEffect(() => {
-    const productType = searchParams?.get('productType') || 'all';
-    setSelectedProductType(productType);
-  }, [searchParams]);
-
-  return (
-    <Select
-      value={selectedProductType}
-      onValueChange={(value) => {
-        setSelectedProductType(value);
-        const url = value === 'all' 
-          ? '/catalogue' 
-          : `/catalogue?productType=${value}`;
-        router.push(url);
-      }}
-    >
-      <SelectTrigger
-        className={`h-10 w-max min-w-0 justify-start gap-1 px-4 py-2 text-lg font-medium leading-none bg-transparent hover:bg-transparent focus:bg-transparent data-placeholder:text-inherit border-transparent focus:border-transparent shadow-none ring-0 focus:ring-0 [&_svg]:h-3 [&_svg]:w-3 [&_svg]:shrink-0 [&_svg]:opacity-80 ${
-          isSolid ? "text-foreground" : "text-white"
-        }`}
-      >
-        <SelectValue placeholder="Catalogue" />
-      </SelectTrigger>
-      <SelectContent>
-        {PRODUCT_TYPE_OPTIONS.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
 }
 
 export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) => {
@@ -146,27 +83,7 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
           </a>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
-              {navbarData.menuItems.map((item, index) => {
-                // Remplacer le dropdown Catalogue par un Select
-                if (item.label === "Catalogue" && item.hasDropdown) {
-                  return (
-                    <NavigationMenuItem key={index}>
-                      <Suspense fallback={
-                        <div
-                          className={`h-10 w-max px-4 flex items-center text-lg font-medium leading-none ${
-                            isSolid ? "text-foreground" : "text-white"
-                          }`}
-                        >
-                          Catalogue
-                        </div>
-                      }>
-                        <CatalogueSelect isSolid={isSolid} />
-                      </Suspense>
-                    </NavigationMenuItem>
-                  );
-                }
-                
-                return (
+              {navbarData.menuItems.map((item, index) => (
                   <NavigationMenuItem key={index}>
                     {item.hasDropdown ? (
                       <>
@@ -176,7 +93,7 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
                           {item.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="bg-popover border shadow-md">
-                          <div className="grid w-[400px] grid-cols-1 p-4">
+                          <div className="grid w-[min(100vw-2rem,28rem)] max-w-md grid-cols-1 p-4">
                             {item.dropdownItems?.map((dropdownItem, idx) => (
                               <NavigationMenuLink
                                 key={idx}
@@ -202,8 +119,7 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
                       </NavigationMenuLink>
                     )}
                   </NavigationMenuItem>
-                );
-              })}
+                ))}
             </NavigationMenuList>
           </NavigationMenu>
           </div>

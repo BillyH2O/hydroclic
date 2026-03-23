@@ -17,30 +17,24 @@ interface SettingsModalProps {
 export default function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   const { user } = useUser()
   const accountType = useAccountType()
-  const [professionalInfo, setProfessionalInfo] = useState<Partial<ProfessionalInfo> | undefined>(undefined)
   const [isAnimating, setIsAnimating] = useState(false)
   
   const isProfessional = accountType === 'professionnel'
+  // Données lues directement sur user : pas de 1er rendu avec undefined (évite d’ouvrir le formulaire au lieu du récap)
+  const professionalInfo = user?.publicMetadata?.professionalInfo as Partial<ProfessionalInfo> | undefined
 
   useEffect(() => {
-    if (open && user) {
-      const info = user.publicMetadata?.professionalInfo as UserPublicMetadata
-      // Utiliser setTimeout pour éviter l'appel synchrone de setState
-      const timer = setTimeout(() => {
-        setProfessionalInfo(info)
-        setIsAnimating(true)
-      }, 0)
-      // Empêcher le scroll du body quand le modal est ouvert
+    if (open) {
       document.body.style.overflow = 'hidden'
+      const timer = setTimeout(() => setIsAnimating(true), 0)
       return () => clearTimeout(timer)
-    } else {
-      document.body.style.overflow = 'unset'
     }
-
+    document.body.style.overflow = 'unset'
+    setIsAnimating(false)
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [open, user])
+  }, [open])
 
   // Gérer la touche Escape
   useEffect(() => {
@@ -98,7 +92,7 @@ export default function SettingsModal({ open, onOpenChange }: SettingsModalProps
             </h2>
             <p className="text-sm text-gray-600 mt-1">
               {isProfessional 
-                ? 'Modifiez vos informations professionnelles'
+                ? 'Consultez vos informations ou modifiez-les'
                 : 'Gérez les paramètres de votre compte'
               }
             </p>

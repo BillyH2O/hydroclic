@@ -12,9 +12,11 @@ export const navbarData = {
       href: "/catalogue",
       hasDropdown: true,
       dropdownItems: [
+        { label: "Tout le catalogue", href: "/catalogue" },
         { label: "Hydrodistribution", href: "/catalogue?productType=hydrodistribution" },
         { label: "Sanitaire", href: "/catalogue?productType=sanitaire" },
         { label: "Chauffage & Climatisation", href: "/catalogue?productType=chauffage-climatisation" },
+        { label: "Traitement de l'eau", href: "/catalogue?productType=traitement-eau" },
         { label: "Outillage", href: "/catalogue?productType=outillage" },
         { label: "Consommable", href: "/catalogue?productType=consommable" },
       ],

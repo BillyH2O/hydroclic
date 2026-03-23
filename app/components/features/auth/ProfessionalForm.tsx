@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,6 +34,24 @@ export default function ProfessionalForm({
     organizationName: initialData?.organizationName || '',
     siret: initialData?.siret || '',
   })
+
+  // Quand initialData arrive après le 1er rendu (ex. modal : métadonnées Clerk chargées dans un useEffect parent).
+  // Signature pour éviter de repasser en lecture seule si la référence d'objet change sans nouvelles données.
+  const syncedInitialSignature = useRef<string | null>(null)
+  useEffect(() => {
+    if (!initialData || Object.keys(initialData).length === 0) return
+    const signature = JSON.stringify(initialData)
+    if (syncedInitialSignature.current === signature) return
+    syncedInitialSignature.current = signature
+    setFormData({
+      firstName: initialData.firstName || '',
+      lastName: initialData.lastName || '',
+      phoneNumber: initialData.phoneNumber || '',
+      organizationName: initialData.organizationName || '',
+      siret: initialData.siret || '',
+    })
+    setIsEditing(false)
+  }, [initialData])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

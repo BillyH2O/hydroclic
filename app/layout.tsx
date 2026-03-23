@@ -35,9 +35,6 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/onboarding/check"
     >
       <html lang="fr">
-        <head>
-        <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
-        </head>
         <body
           className={`${lexend.variable} font-sans antialiased`}
         >

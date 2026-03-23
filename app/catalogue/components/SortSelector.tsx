@@ -27,7 +27,7 @@ export default function SortSelector({ value, onChange }: SortSelectorProps) {
           id="sort-select"
           value={value}
           onChange={(e) => onChange(e.target.value as SortOption)}
-          className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer hover:border-gray-400 transition-colors"
+          className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/40 cursor-pointer hover:border-primary/35 transition-colors"
         >
           {SORT_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>

@@ -45,7 +45,7 @@ export default async function CataloguePage({ searchParams }: CataloguePageProps
   const result = await CatalogueService.getPaginatedProducts(filters, pagination)
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-blue-100 to-white font-sans flex flex-col">
+    <div className="w-full min-h-screen bg-linear-to-b from-primary/40 from-0% via-primary/15 via-12% to-background to-30% font-sans flex flex-col">
       <Navbar solid />
       
       <main className="w-full flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 mb-12 md:mb-16 lg:mb-20">
