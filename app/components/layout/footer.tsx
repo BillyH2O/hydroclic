@@ -36,7 +36,7 @@ export function Footer({ className, ...props }: StickyFooterProps) {
 						{/* Contenu aligné sur le même max-width que le reste de la landing */}
 						<div className="relative z-10 mx-auto flex min-h-full w-full max-w-7xl flex-col justify-between px-4 py-8 sm:px-6 lg:px-8">
 						<div className="mt-10 flex flex-col justify-center gap-6 lg:flex-row xl:mt-0">
-							<AnimatedContainer className="w-full space-y-4 flex flex-col justify-center items-center">
+							<AnimatedContainer className="w-full space-y-4 flex flex-col justify-center items-start">
 								<Image
 									src="/logow.png"
 									alt="Hydroclic Logo"

@@ -6,6 +6,8 @@ import { Description } from '@/components/ui/Description'
 
 interface CatalogueData {
   title: string
+  /** Slug filtre catalogue, identique à `productType` en base / sidebar */
+  productType: string
   description: string
   image: string
   imageAlt: string
@@ -19,9 +21,18 @@ export const CatalogueSection = () => {
       <Badge label="Catalogue"/>
       <Description title="Nos catégories de produits" description="Découvrez une gamme complète pour tous vos projets en plomberie : de la distribution d'eau à la régulation thermique." />
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 lg:grid-rows-4 gap-4 md:gap-6 auto-rows-fr">
-
+      
       {catalogueDataItems.map((item: CatalogueData, index: number) => (
-        <CatalogueCard key={`catalogue-${index}`} index={index} title={item.title} description={item.description} image={item.image} imageAlt={item.imageAlt} buttonLabel="Explorer" buttonHref={`/catalogue/${item.title}`} />
+        <CatalogueCard
+          key={`catalogue-${index}`}
+          index={index}
+          title={item.title}
+          description={item.description}
+          image={item.image}
+          imageAlt={item.imageAlt}
+          buttonLabel="Explorer"
+          buttonHref={`/catalogue?productType=${encodeURIComponent(item.productType)}`}
+        />
       ))}
       </div>
     </div>

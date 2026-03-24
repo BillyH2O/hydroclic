@@ -16,7 +16,7 @@ import { TestimonialSection } from "./components/features/landing/avis/Testimona
 import { Footer } from "./components/layout/footer";
 
 export default async function Home() {
-  // Utiliser le Service Layer pour récupérer les produits avec logique métier
+
   const sampleProducts = await ProductService.getOfferProducts()
   console.log("sampleProducts :", sampleProducts)
   console.log("len sampleProducts :", sampleProducts.length)

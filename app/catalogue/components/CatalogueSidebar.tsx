@@ -23,6 +23,7 @@ const OFFER_FILTERS: { value: OfferFilter; label: string }[] = [
 const PRODUCT_TYPE_FILTERS: { value: ProductTypeFilter; label: string }[] = [
   { value: 'all', label: 'Tous les types' },
   { value: 'hydrodistribution', label: 'Hydrodistribution' },
+  { value: 'traitement-eau', label: "Traitement de l'eau" },
   { value: 'sanitaire', label: 'Sanitaire' },
   { value: 'chauffage-climatisation', label: 'Chauffage & Climatisation' },
   { value: 'outillage', label: 'Outillage' },
