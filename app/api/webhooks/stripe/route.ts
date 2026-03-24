@@ -153,16 +153,25 @@ export async function POST(request: NextRequest) {
 
         console.log(`[webhooks/stripe] ✅ Order created: ${order.id}`)
 
-        // Créer la facture Stripe
+        // Créer la facture Stripe (nécessite un Customer : customer_creation: 'always' sur Checkout)
         let invoicePdfUrl: string | null = null
         let invoiceHostedUrl: string | null = null
-        
-        if (session.customer) {
-          try {
-            const stripeCustomerId = typeof session.customer === 'string' 
-              ? session.customer 
-              : session.customer.id
 
+        const resolveStripeCustomerId = async (): Promise<string | null> => {
+          const c = session.customer
+          if (c) {
+            return typeof c === 'string' ? c : c.id
+          }
+          const refreshed = await stripe.checkout.sessions.retrieve(session.id)
+          const rc = refreshed.customer
+          if (!rc) return null
+          return typeof rc === 'string' ? rc : rc.id
+        }
+
+        const stripeCustomerId = await resolveStripeCustomerId()
+
+        if (stripeCustomerId) {
+          try {
             console.log(`[webhooks/stripe] 🧾 Creating Stripe Invoice for customer: ${stripeCustomerId}`)
 
             // Créer les invoice items
@@ -208,6 +217,10 @@ export async function POST(request: NextRequest) {
             console.error('[webhooks/stripe] ⚠️ Failed to create Stripe Invoice:', invoiceError)
             // Ne pas faire échouer le webhook si la facture échoue
           }
+        } else {
+          console.warn(
+            '[webhooks/stripe] No Stripe customer on session; invoice PDF skipped. Use customer_creation: always on Checkout.',
+          )
         }
 
         // Envoyer l'email de confirmation

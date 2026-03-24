@@ -94,10 +94,13 @@ export class PaymentService {
       process.env.STRIPE_SHIPPING_LABEL?.trim() || 'Livraison standard (France / UE)'
 
     // Créer la session de checkout (e-commerce : facturation, livraison, téléphone)
+    // customer_creation: 'always' → un Customer Stripe existe après paiement, nécessaire pour
+    // créer une Invoice + PDF dans le webhook et inclure le lien dans l’e-mail de confirmation.
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
+      customer_creation: 'always',
       success_url: data.successUrl,
       cancel_url: data.cancelUrl,
       customer_email: data.customerEmail,
