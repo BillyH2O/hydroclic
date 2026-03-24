@@ -27,6 +27,7 @@ export async function createProductAction(data: {
   try {
     const product = await ProductService.createProduct(data)
     revalidatePath('/admin')
+    revalidatePath('/admin/catalogue')
     revalidatePath('/')
     return { success: true, product }
   } catch (error) {
@@ -57,6 +58,7 @@ export async function updateProductAction(
   try {
     const product = await ProductService.updateProduct(id, data)
     revalidatePath('/admin')
+    revalidatePath('/admin/catalogue')
     revalidatePath(`/produit/${id}`)
     revalidatePath('/')
     return { success: true, product }
@@ -72,6 +74,7 @@ export async function deleteProductAction(
   try {
     await ProductService.deleteProduct(id)
     revalidatePath('/admin')
+    revalidatePath('/admin/catalogue')
     revalidatePath('/')
     return { success: true }
   } catch (error) {

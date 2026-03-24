@@ -14,6 +14,21 @@ interface ProductFormProps {
   onSuccess: () => void
 }
 
+function validateFormData(data: {
+  name: string
+  priceB2C: number
+  priceB2B: number
+  image: string
+}): string | null {
+  if (!data.name.trim()) return 'Le nom du produit est obligatoire.'
+  if (!data.image.trim()) return "L'image est obligatoire (chemin ou URL)."
+  if (isNaN(data.priceB2C) || data.priceB2C < 0.5)
+    return "Le prix B2C doit être d'au moins 0,50 \u20ac."
+  if (isNaN(data.priceB2B) || data.priceB2B < 0.5)
+    return "Le prix B2B doit être d'au moins 0,50 \u20ac."
+  return null
+}
+
 export default function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -61,9 +76,15 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError(null)
 
+    const validationError = validateFormData(formData)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
+    setLoading(true)
     try {
       const data = {
         ...formData,
@@ -85,10 +106,10 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         onSuccess()
         onClose()
       } else {
-        setError(result.error || 'Une erreur est survenue')
+        setError(result.error || 'Une erreur est survenue côté serveur.')
       }
     } catch {
-      setError('Une erreur est survenue')
+      setError('Erreur réseau ou serveur inattendue.')
     } finally {
       setLoading(false)
     }
