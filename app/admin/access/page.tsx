@@ -1,17 +1,10 @@
 import { Suspense } from 'react'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import AdminAccessForm from './AdminAccessForm'
 import { isAdminGateConfigured } from '@/lib/admin/gate'
 
 export default async function AdminAccessPage() {
-  const { userId } = await auth()
-  if (!userId) {
-    redirect('/sign-in')
-  }
-
   const configured = isAdminGateConfigured()
 
   return (

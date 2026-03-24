@@ -98,7 +98,7 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
       
       {/* Sheet */}
       <div
-        className={`fixed right-0 top-0 h-full w-full md:max-w-md bg-white shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 h-dvh w-full md:max-w-md bg-white shadow-2xl transition-transform duration-300 ${
           isAnimating ? 'translate-x-0' : 'translate-x-full'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -118,8 +118,8 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
           </button>
         </div>
 
-        {/* Contenu */}
-        <div className="flex flex-col h-[calc(100vh-73px)] bg-white">
+        {/* Contenu — dvh (dynamic viewport) sur mobile pour tenir compte de la barre du navigateur */}
+        <div className="flex flex-col h-[calc(100dvh-73px)] bg-white">
           {/* Liste des produits */}
           <div className="flex-1 overflow-y-auto p-6 bg-white">
             {isLoading ? (

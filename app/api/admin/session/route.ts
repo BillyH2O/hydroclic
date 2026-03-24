@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
 import { cookies } from 'next/headers'
 import { timingSafeEqual } from 'node:crypto'
 import {
@@ -22,11 +21,6 @@ export async function POST(request: NextRequest) {
       { error: 'ADMIN_PASSWORD is not set in environment.' },
       { status: 503 },
     )
-  }
-
-  const { userId } = await auth()
-  if (!userId) {
-    return NextResponse.json({ error: 'Non authentifie' }, { status: 401 })
   }
 
   const expected = process.env.ADMIN_PASSWORD!.trim()
@@ -57,11 +51,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE() {
-  const { userId } = await auth()
-  if (!userId) {
-    return NextResponse.json({ error: 'Non authentifie' }, { status: 401 })
-  }
-
   const jar = await cookies()
   jar.delete(ADMIN_GATE_COOKIE)
 

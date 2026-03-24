@@ -2,25 +2,15 @@ import { ProductService } from '@/lib/services/products'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { AdminDashboard } from '@/components/features/admin'
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 /**
  * Page Dashboard de l'administration
  * Accessible via /admin/dashboard
- * Affiche les statistiques générales
+ * Protégée par ADMIN_PASSWORD (middleware)
  */
 export default async function AdminDashboardPage() {
-  // Vérifier l'authentification
-  const { userId } = await auth()
-  
-  if (!userId) {
-    redirect('/sign-in')
-  }
-
-  // Récupérer tous les produits pour les statistiques
   const products = await ProductService.getAllProducts()
 
   return (

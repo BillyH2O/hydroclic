@@ -2,30 +2,14 @@ import { ProductService } from '@/lib/services/products'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { AdminDashboard, AdminNavCard } from '@/components/features/admin'
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import { BarChart3, Package } from 'lucide-react'
 
 /**
  * Page d'accueil de l'administration
  * Accessible via /admin
- * Protégée par Clerk - nécessite une authentification
+ * Protégée par ADMIN_PASSWORD (middleware)
  */
 export default async function AdminPage() {
-  // Vérifier l'authentification
-  const { userId } = await auth()
-  
-  if (!userId) {
-    redirect('/sign-in')
-  }
-
-  // Optionnel : vérifier les rôles/permissions si nécessaire
-  // const user = await currentUser()
-  // if (user && !user.publicMetadata?.isAdmin) {
-  //   redirect('/')
-  // }
-
-  // Récupérer tous les produits pour les statistiques
   const products = await ProductService.getAllProducts()
 
   return (
