@@ -30,8 +30,9 @@ export default function SettingsModal({ open, onOpenChange }: SettingsModalProps
       return () => clearTimeout(timer)
     }
     document.body.style.overflow = 'unset'
-    setIsAnimating(false)
+    const reset = setTimeout(() => setIsAnimating(false), 0)
     return () => {
+      clearTimeout(reset)
       document.body.style.overflow = 'unset'
     }
   }, [open])

@@ -1,7 +1,7 @@
 export const footerData = {
   description: "Tubes, raccords, vannes, collecteurs… tout pour une distribution d'eau performante, fiable et conforme aux normes en vigueur.",
   contact: {
-    email: "contact@hydroclic.lorem",
+    email: "shop@hydroclic.fr",
     phone: "+33 1 23 45 67 89",
   },
   socialLinks: [
@@ -42,8 +42,6 @@ export const footerData = {
       links: [
         { title: 'Mentions légales', href: '/mentions-legales' },
         { title: 'Politique de confidentialité', href: '/politique-de-confidentialite' },
-        { title: 'CGV', href: '/cgv' },
-        { title: 'CGU', href: '/cgu' },
       ],
     },
   ],

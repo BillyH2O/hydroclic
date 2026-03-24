@@ -62,7 +62,7 @@ export class EmailService {
     try {
       const transporter = this.getTransporter()
       const emailUser = process.env.EMAIL_USER
-      const from = params.from || emailUser || 'no-reply@hydroclic.com'
+      const from = params.from || emailUser || 'shop@hydroclic.fr'
 
       await transporter.sendMail({
         from,

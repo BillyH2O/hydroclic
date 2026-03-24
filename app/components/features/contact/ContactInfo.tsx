@@ -27,7 +27,7 @@ export default function ContactInfo() {
           <div>
             <p className="text-sm text-gray-600">Email</p>
             <p className="text-base font-medium text-gray-900">
-              contact@hydroclic.fr
+            shop@hydroclic.fr
             </p>
           </div>
         </div>

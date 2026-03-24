@@ -46,8 +46,8 @@ export default function PolitiqueConfidentialitePage() {
               </p>
               <p>
                 <strong>Email :</strong>{' '}
-                <a href="mailto:contact@hydroclic.fr" className="text-primary hover:underline">
-                  contact@hydroclic.fr
+                <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
+                shop@hydroclic.fr
                 </a>
               </p>
             </div>
@@ -181,8 +181,8 @@ export default function PolitiqueConfidentialitePage() {
             </ul>
             <p className="text-gray-700 mt-4">
               Pour exercer ces droits, contactez-nous à l&apos;adresse :{' '}
-              <a href="mailto:contact@hydroclic.fr" className="text-primary hover:underline">
-                contact@hydroclic.fr
+              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
+                shop@hydroclic.fr
               </a>
             </p>
             <p className="text-gray-700 mt-2">
@@ -244,8 +244,8 @@ export default function PolitiqueConfidentialitePage() {
             </h2>
             <p className="text-gray-700">
               Pour toute question concernant cette politique de confidentialité ou le traitement de vos données personnelles, vous pouvez nous contacter à l&apos;adresse :{' '}
-              <a href="mailto:contact@hydroclic.fr" className="text-primary hover:underline">
-                contact@hydroclic.fr
+              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
+                shop@hydroclic.fr
               </a>
             </p>
           </section>

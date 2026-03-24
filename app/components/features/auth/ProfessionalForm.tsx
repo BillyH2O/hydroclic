@@ -43,14 +43,17 @@ export default function ProfessionalForm({
     const signature = JSON.stringify(initialData)
     if (syncedInitialSignature.current === signature) return
     syncedInitialSignature.current = signature
-    setFormData({
-      firstName: initialData.firstName || '',
-      lastName: initialData.lastName || '',
-      phoneNumber: initialData.phoneNumber || '',
-      organizationName: initialData.organizationName || '',
-      siret: initialData.siret || '',
-    })
-    setIsEditing(false)
+    const t = window.setTimeout(() => {
+      setFormData({
+        firstName: initialData.firstName || '',
+        lastName: initialData.lastName || '',
+        phoneNumber: initialData.phoneNumber || '',
+        organizationName: initialData.organizationName || '',
+        siret: initialData.siret || '',
+      })
+      setIsEditing(false)
+    }, 0)
+    return () => clearTimeout(t)
   }, [initialData])
 
   const handleSubmit = async (e: React.FormEvent) => {

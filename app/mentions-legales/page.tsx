@@ -47,7 +47,7 @@ export default function MentionsLegalesPage() {
                 <strong>TVA Intracommunautaire :</strong> [Numéro à compléter]
               </p>
               <p>
-                <strong>Email :</strong> contact@hydroclic.fr
+                <strong>Email :</strong> shop@hydroclic.fr
               </p>
               <p>
                 <strong>Téléphone :</strong> [Numéro à compléter]
@@ -108,7 +108,7 @@ export default function MentionsLegalesPage() {
               Conformément à la loi &quot; Informatique et Libertés &quot; du 6 janvier 1978 modifiée et au Règlement Général sur la Protection des Données (RGPD), vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et d&apos;opposition aux données personnelles vous concernant.
             </p>
             <p className="text-gray-700">
-              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse : contact@hydroclic.fr
+              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse : shop@hydroclic.fr
             </p>
             <p className="text-gray-700 mt-2">
               Pour plus d&apos;informations, consultez notre{' '}
@@ -177,8 +177,8 @@ export default function MentionsLegalesPage() {
             </h2>
             <p className="text-gray-700">
               Pour toute question concernant les présentes mentions légales, vous pouvez nous contacter à l&apos;adresse :{' '}
-              <a href="mailto:contact@hydroclic.fr" className="text-primary hover:underline">
-                contact@hydroclic.fr
+              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
+                shop@hydroclic.fr
               </a>
             </p>
           </section>
