@@ -1,5 +1,12 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import {
+  ADMIN_GATE_COOKIE,
+  computeAdminGateToken,
+  getAdminGateSecret,
+  isAdminGateConfigured,
+  timingSafeEqualHex,
+} from '@/lib/admin/gate'
 
 // Routes protégées qui nécessitent une authentification
 const isProtectedRoute = createRouteMatcher([
@@ -22,6 +29,21 @@ export default clerkMiddleware(async (auth, request) => {
   // Protéger les routes admin
   if (isProtectedRoute(request)) {
     await auth.protect()
+
+    // Porte mot de passe (ADMIN_PASSWORD) : cookie httpOnly, sauf page /admin/access
+    if (isAdminGateConfigured()) {
+      const pathname = url.pathname
+      if (!pathname.startsWith('/admin/access')) {
+        const secret = getAdminGateSecret()
+        const expected = await computeAdminGateToken(secret)
+        const cookie = request.cookies.get(ADMIN_GATE_COOKIE)?.value
+        const valid = Boolean(cookie && timingSafeEqualHex(cookie, expected))
+        if (!valid) {
+          const next = encodeURIComponent(pathname + url.search)
+          return NextResponse.redirect(new URL(`/admin/access?next=${next}`, request.url))
+        }
+      }
+    }
   }
 })
 

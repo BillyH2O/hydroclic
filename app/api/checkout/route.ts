@@ -93,8 +93,13 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error creating checkout session:', error)
+    const message =
+      error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement'
     return NextResponse.json(
-      { error: 'Erreur lors de la création de la session de paiement' },
+      {
+        error: 'Erreur lors de la création de la session de paiement',
+        ...(process.env.NODE_ENV === 'development' && { detail: message }),
+      },
       { status: 500 }
     )
   }
