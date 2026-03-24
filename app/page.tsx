@@ -13,7 +13,6 @@ import { BrandSection } from "./components/features/landing/brand/BrandSection";
 import AboutSection from "./components/features/landing/about/AboutSection";
 /*import { BlogSection } from "./components/features/landing/blog/BlogSection";*/
 import { TestimonialSection } from "./components/features/landing/avis/TestimonalSection";
-import { UpsellSection } from "./components/features/landing/upsell/UpsellSection";
 import { Footer } from "./components/layout/footer";
 
 export default async function Home() {
