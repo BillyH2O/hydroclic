@@ -3,6 +3,10 @@ import { PaymentService } from '@/lib/services/payment'
 import { EmailService } from '@/lib/services/email'
 import { prisma } from '@/lib/prisma'
 import Stripe from 'stripe'
+import {
+  checkoutAddressSnapshots,
+  formatCheckoutAddressesForEmail,
+} from '@/lib/stripe/checkoutAddresses'
 
 /**
  * API Route pour gérer les webhooks Stripe
@@ -69,6 +73,9 @@ export async function POST(request: NextRequest) {
           ? (session.metadata.productIds as string).split(',').filter(Boolean)
           : []
 
+        const addrSnap = checkoutAddressSnapshots(session)
+        const addrEmail = formatCheckoutAddressesForEmail(session)
+
         // Créer la commande dans la base de données
         const order = await prisma.order.create({
           data: {
@@ -78,6 +85,13 @@ export async function POST(request: NextRequest) {
             totalAmount,
             currency: session.currency || 'eur',
             customerEmail: email,
+            customerPhone: addrSnap.customerPhone,
+            billingAddress: addrSnap.billingAddress
+              ? (addrSnap.billingAddress as object)
+              : undefined,
+            shippingAddress: addrSnap.shippingAddress
+              ? (addrSnap.shippingAddress as object)
+              : undefined,
             items: {
               create: await Promise.all(
                 lineItems.data.map(async (lineItem, index) => {
@@ -207,6 +221,9 @@ export async function POST(request: NextRequest) {
               orderNumber: order.id.substring(0, 8).toUpperCase(),
               customerEmail: email,
               customerName: session.customer_details?.name || undefined,
+              customerPhone: addrEmail.customerPhone,
+              billingAddressSummary: addrEmail.billingSummary || undefined,
+              shippingAddressSummary: addrEmail.shippingSummary || undefined,
               items: order.items.map((item) => ({
                 name: item.product?.name || 'Produit',
                 quantity: item.quantity,

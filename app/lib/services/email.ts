@@ -148,6 +148,9 @@ ${data.message}
     orderNumber?: string
     customerEmail: string
     customerName?: string
+    customerPhone?: string
+    billingAddressSummary?: string
+    shippingAddressSummary?: string
     items: Array<{
       name: string
       quantity: number
@@ -191,7 +194,22 @@ ${data.message}
         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
           <h3 style="margin:0 0 12px 0;color:#1a1a1a">Vos informations de contact</h3>
           <p style="margin:4px 0"><strong>Email:</strong> ${data.customerEmail}</p>
+          ${data.customerPhone ? `<p style="margin:4px 0"><strong>Téléphone:</strong> ${data.customerPhone}</p>` : ''}
         </div>
+
+        ${data.billingAddressSummary ? `
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+          <h3 style="margin:0 0 12px 0;color:#1a1a1a">Adresse de facturation</h3>
+          <pre style="white-space:pre-wrap;font-family:inherit;margin:0;font-size:14px">${data.billingAddressSummary.replace(/</g, '&lt;')}</pre>
+        </div>
+        ` : ''}
+
+        ${data.shippingAddressSummary ? `
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+          <h3 style="margin:0 0 12px 0;color:#1a1a1a">Adresse de livraison</h3>
+          <pre style="white-space:pre-wrap;font-family:inherit;margin:0;font-size:14px">${data.shippingAddressSummary.replace(/</g, '&lt;')}</pre>
+        </div>
+        ` : ''}
 
         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
           <h3 style="margin:0 0 12px 0;color:#1a1a1a">Articles commandés</h3>
@@ -233,8 +251,9 @@ Détails de la commande:
 
 Vos informations de contact:
 - Email: ${data.customerEmail}
+${data.customerPhone ? `- Téléphone: ${data.customerPhone}` : ''}
 
-Articles commandés:
+${data.billingAddressSummary ? `Adresse de facturation:\n${data.billingAddressSummary}\n\n` : ''}${data.shippingAddressSummary ? `Adresse de livraison:\n${data.shippingAddressSummary}\n\n` : ''}Articles commandés:
 ${itemsList}
 
 Total payé: ${orderTotal}${currencySymbol}

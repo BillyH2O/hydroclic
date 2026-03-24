@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { CartItem, CheckoutSessionData, PaymentMetadata } from '@/lib/types/payment'
+import { DEFAULT_CHECKOUT_SHIPPING_COUNTRIES } from '@/lib/stripe/checkoutAddresses'
 
 /**
  * Service pour gérer les paiements Stripe
@@ -85,7 +86,14 @@ export class PaymentService {
       })
     }
 
-    // Créer la session de checkout
+    const shippingCents = Math.max(
+      0,
+      parseInt(process.env.STRIPE_SHIPPING_CENTS ?? '0', 10) || 0,
+    )
+    const shippingLabel =
+      process.env.STRIPE_SHIPPING_LABEL?.trim() || 'Livraison standard (France / UE)'
+
+    // Créer la session de checkout (e-commerce : facturation, livraison, téléphone)
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -96,6 +104,23 @@ export class PaymentService {
       metadata: Object.keys(stripeMetadata).length > 0 ? stripeMetadata : undefined,
       locale: 'fr',
       currency: 'eur',
+      billing_address_collection: 'required',
+      phone_number_collection: { enabled: true },
+      shipping_address_collection: {
+        allowed_countries: DEFAULT_CHECKOUT_SHIPPING_COUNTRIES,
+      },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            display_name: shippingLabel,
+            fixed_amount: {
+              amount: shippingCents,
+              currency: 'eur',
+            },
+          },
+        },
+      ],
     })
 
     return {

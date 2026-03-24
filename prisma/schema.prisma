@@ -70,6 +70,9 @@ model Order {
   totalAmount     Float    // Montant total en euros
   currency        String   @default("eur")
   customerEmail   String?
+  customerPhone   String?
+  billingAddress  Json?    // facturation (snapshot Stripe customer_details)
+  shippingAddress Json?    // livraison (snapshot Stripe shipping_details)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
