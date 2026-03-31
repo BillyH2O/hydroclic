@@ -42,4 +42,11 @@ export const catalogueData = {
         image: "/category/consommable.png",
         imageAlt: "Catalogue",
     },
+    item7: {
+        title: 'Électricité',
+        productType: 'electricite',
+        description: "Catalogue",
+        image: "/category/electricite.png",
+        imageAlt: "Catalogue",
+    },
 }

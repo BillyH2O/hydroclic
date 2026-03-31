@@ -19,6 +19,7 @@ export const navbarData = {
         { label: "Traitement de l'eau", href: "/catalogue?productType=traitement-eau" },
         { label: "Outillage", href: "/catalogue?productType=outillage" },
         { label: "Consommable", href: "/catalogue?productType=consommable" },
+        { label: "Électricité", href: "/catalogue?productType=electricite" },
       ],
     },
     {
