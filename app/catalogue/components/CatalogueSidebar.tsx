@@ -28,6 +28,7 @@ const PRODUCT_TYPE_FILTERS: { value: ProductTypeFilter; label: string }[] = [
   { value: 'chauffage-climatisation', label: 'Chauffage & Climatisation' },
   { value: 'outillage', label: 'Outillage' },
   { value: 'consommable', label: 'Consommable' },
+  { value: 'electricite', label: 'Électricité' },
 ]
 
 export default function CatalogueSidebar({

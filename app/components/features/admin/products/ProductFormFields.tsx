@@ -35,6 +35,7 @@ const productTypes: { value: ProductCategory; label: string }[] = [
   { value: 'sanitaire', label: 'Sanitaire' },
   { value: 'outillage', label: 'Outillage' },
   { value: 'consommable', label: 'Consommable' },
+  { value: 'electricite', label: 'Électricité' },
 ]
 
 export default function ProductFormFields({ formData, onFieldChange }: ProductFormFieldsProps) {

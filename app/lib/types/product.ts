@@ -13,6 +13,7 @@ export type ProductCategory =
   | 'sanitaire'
   | 'outillage'
   | 'consommable'
+  | 'electricite'
   | 'all'
 
 export interface Product {
