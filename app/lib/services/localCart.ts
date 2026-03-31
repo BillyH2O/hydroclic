@@ -101,10 +101,14 @@ export class LocalCartService {
     const items = this.getCart()
     
     return items.reduce((total, item) => {
-      const price = accountType === 'professionnel' 
+      const basePrice = accountType === 'professionnel' 
         ? item.product.priceB2B 
         : item.product.priceB2C
-      return total + (price || 0) * item.quantity
+      const discount = item.product.discount
+      const price = discount && discount > 0
+        ? (basePrice || 0) * (1 - discount / 100)
+        : (basePrice || 0)
+      return total + price * item.quantity
     }, 0)
   }
 

@@ -8,6 +8,7 @@ import { useUser } from '@clerk/nextjs'
 import CheckoutButton from '@/components/features/payment/CheckoutButton'
 import SafeImage from '@/components/ui/SafeImage'
 import { formatPrice, getProductPrice } from '@/lib/utils'
+import { ProductService } from '@/lib/services/products'
 
 interface CartSheetProps {
   open: boolean
@@ -140,12 +141,14 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
               <div className="space-y-4">
                 {items.map((item) => {
                   const product = item.product
-                  // Utiliser le même prix que celui utilisé pour le calcul du total
-                  const price = getProductPrice(
+                  // Prix de base selon le type de compte, puis réduction appliquée
+                  const price = ProductService.calculateFinalPrice(product, accountType)
+                  const basePrice = getProductPrice(
                     product.priceB2C || 0,
                     product.priceB2B || 0,
                     accountType
                   )
+                  const hasDiscount = product.discount && product.discount > 0
                   const itemTotal = price * item.quantity
 
                   return (
@@ -169,7 +172,15 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
                           {product.name}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
-                          {formatPrice(price)} × {item.quantity}
+                          {hasDiscount ? (
+                            <>
+                              <span className="text-red-600 font-medium">{formatPrice(price)}</span>
+                              <span className="line-through ml-1">{formatPrice(basePrice)}</span>
+                              <span className="text-red-500 ml-1 text-xs">-{product.discount}%</span>
+                            </>
+                          ) : (
+                            formatPrice(price)
+                          )}{' '}× {item.quantity}
                         </p>
                         <p className="text-sm font-semibold text-gray-900 mt-1">
                           {formatPrice(itemTotal)}
