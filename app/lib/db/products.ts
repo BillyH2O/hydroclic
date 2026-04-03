@@ -26,6 +26,8 @@ function mapDbProductToProduct(dbProduct: DbProduct): Product {
     isNew: dbProduct.isNew || false,
     isPromotion: dbProduct.isPromotion || false,
     isDestockage: dbProduct.isDestockage || false,
+    ribbonText: dbProduct.ribbonText || undefined,
+    ribbonColor: dbProduct.ribbonColor || undefined,
   }
 }
 
@@ -210,6 +212,8 @@ export async function createProduct(data: {
   isNew?: boolean
   isPromotion?: boolean
   isDestockage?: boolean
+  ribbonText?: string
+  ribbonColor?: string
 }): Promise<Product> {
   try {
     const product = await prisma.product.create({
@@ -228,6 +232,8 @@ export async function createProduct(data: {
         isNew: data.isNew || false,
         isPromotion: data.isPromotion || false,
         isDestockage: data.isDestockage || false,
+        ribbonText: data.ribbonText || null,
+        ribbonColor: data.ribbonColor || null,
       },
     })
     return mapDbProductToProduct(product)
@@ -257,6 +263,8 @@ export async function updateProduct(
     isNew?: boolean
     isPromotion?: boolean
     isDestockage?: boolean
+    ribbonText?: string
+    ribbonColor?: string
   }
 ): Promise<Product> {
   try {
@@ -264,7 +272,9 @@ export async function updateProduct(
       where: { id },
       data: {
         ...data,
-        image: data.image || undefined, // Garder l'image existante si non fournie
+        image: data.image || undefined,
+        ribbonText: data.ribbonText ?? null,
+        ribbonColor: data.ribbonColor ?? null,
       },
     })
     return mapDbProductToProduct(product)

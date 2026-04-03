@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import ProductCard from './ProductCard'
 import { Product, ProductCategory } from '@/lib/types/product'
@@ -20,6 +21,8 @@ interface ProductSliderProps {
   defaultFilter?: ProductCategory // Filtre par défaut
   filterConfig?: FilterConfig // Configuration de filtres personnalisée
   filterTabs?: FilterTab[] // Personnaliser les onglets de filtre (déprécié, utiliser filterConfig)
+  /** Limite le nombre de produits affichés (ex. accueil) + bouton « Voir tout » vers le catalogue */
+  maxProducts?: number
 }
 
 const ProductSlider: React.FC<ProductSliderProps> = ({
@@ -31,6 +34,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   defaultFilter = 'all',
   filterConfig,
   filterTabs, // Déprécié mais toujours supporté pour compatibilité
+  maxProducts,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -110,6 +114,16 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     return filterProducts(activeFilter, products, config.filterType)
   }, [products, activeFilter, config.filterType, filterProducts])
 
+  const displayedProducts = useMemo(() => {
+    if (maxProducts === undefined || maxProducts <= 0) return filteredProducts
+    return filteredProducts.slice(0, maxProducts)
+  }, [filteredProducts, maxProducts])
+
+  const seeAllHref = useMemo(() => {
+    if (activeFilter === 'all') return '/catalogue'
+    return `/catalogue?productType=${encodeURIComponent(activeFilter)}`
+  }, [activeFilter])
+
   // Générer les onglets de filtre avec compteurs
   const tabs: FilterTab[] = useMemo(() => {
     return config.tabs.map((tab) => ({
@@ -149,8 +163,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     return () => window.removeEventListener('resize', updateVisibleProducts)
   }, [productsToShow])
 
-  // Calculer le nombre maximum de slides possibles avec les produits filtrés
-  const maxIndex = Math.max(0, filteredProducts.length - visibleProducts)
+  const maxIndex = Math.max(0, displayedProducts.length - visibleProducts)
 
   // Fonction pour aller au slide précédent
   const goToPrevious = () => {
@@ -179,10 +192,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
       }, 0)
       return () => clearTimeout(timer)
     }
-  }, [filteredProducts.length, maxIndex, currentIndex, visibleProducts])
+  }, [displayedProducts.length, maxIndex, currentIndex, visibleProducts])
 
   // Calculer la largeur de chaque produit (en pourcentage)
-  const productWidth = filteredProducts.length > 0 ? 100 / visibleProducts : 0
+  const productWidth = displayedProducts.length > 0 ? 100 / visibleProducts : 0
 
   const handleFilterChange = (filter: ProductCategory) => {
     setActiveFilter(filter)
@@ -217,15 +230,14 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         </div>
       ) : (
         <>
-          {/* Container du slider */}
           <div className="relative w-full overflow-hidden">
             <div
-              className="flex justify-center items-center transition-transform duration-300 ease-in-out"
+              className="flex justify-start items-stretch transition-transform duration-300 ease-in-out"
               style={{
                 transform: `translateX(-${currentIndex * productWidth}%)`,
               }}
             >
-              {filteredProducts.map((product) => (
+              {displayedProducts.map((product) => (
                 <div
                   key={product.id}
                   className="shrink-0 px-1 sm:px-2 md:px-3 min-w-0"
@@ -236,6 +248,16 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               ))}
             </div>
           </div>
+          {maxProducts !== undefined && maxProducts > 0 && filteredProducts.length > 0 && (
+            <div className="flex justify-center mt-6 sm:mt-8">
+              <Link
+                href={seeAllHref}
+                className="inline-flex items-center justify-center rounded-lg border-2 border-primary bg-white px-6 py-2.5 text-sm font-semibold text-primary shadow-sm transition hover:bg-primary hover:text-white"
+              >
+                Voir tout
+              </Link>
+            </div>
+          )}
         </>
       )}
 

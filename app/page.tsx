@@ -18,8 +18,6 @@ import { Footer } from "./components/layout/footer";
 export default async function Home() {
 
   const sampleProducts = await ProductService.getOfferProducts()
-  console.log("sampleProducts :", sampleProducts)
-  console.log("len sampleProducts :", sampleProducts.length)
   const productsByType = await ProductService.getProductsByType()
   return (
     <div className="w-full min-h-screen bg-zinc-50 font-sans overflow-x-hidden">
@@ -45,11 +43,12 @@ export default async function Home() {
         
         {productsByType.length > 0 && (
           <div className="w-full">
-            <ProductSlider 
+            <ProductSlider
               products={productsByType}
               productsToShow={{ mobile: 1, tablet: 3, desktop: 5 }}
               filterConfig={productTypeFiltersConfig}
               defaultFilter="all"
+              maxProducts={8}
             />
           </div>
         )}

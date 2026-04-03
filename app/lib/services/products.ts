@@ -240,6 +240,8 @@ export class ProductService {
     isNew?: boolean
     isPromotion?: boolean
     isDestockage?: boolean
+    ribbonText?: string
+    ribbonColor?: string
   }): Promise<Product> {
     // Logique métier : appliquer image par défaut
     if (!data.image) {
@@ -276,6 +278,8 @@ export class ProductService {
       isNew?: boolean
       isPromotion?: boolean
       isDestockage?: boolean
+      ribbonText?: string
+      ribbonColor?: string
     }
   ): Promise<Product> {
     // Logique métier : mettre à jour isPromotion selon discount

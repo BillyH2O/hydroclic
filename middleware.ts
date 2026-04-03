@@ -11,6 +11,12 @@ import {
 export default clerkMiddleware(async (auth, request) => {
   const url = request.nextUrl
 
+  // Webhooks (Stripe, Clerk, …) : pas de logique Clerk ni redirection.
+
+  if (url.pathname.startsWith('/api/webhooks')) {
+    return NextResponse.next()
+  }
+
   // Intercepter toutes les redirections vers choose-organization et rediriger vers la page d'accueil
   if (
     url.pathname.includes('/tasks/choose-organization') ||

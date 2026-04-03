@@ -65,6 +65,10 @@ export const productTypeFiltersConfig: FilterConfig = {
       id: 'consommable',
       label: 'Consommable',
     },
+    {
+      id: 'electricite',
+      label: 'Électricité',
+    },
   ],
   filterType: 'productTypes',
 }

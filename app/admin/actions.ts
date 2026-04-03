@@ -23,6 +23,8 @@ export async function createProductAction(data: {
   isNew?: boolean
   isPromotion?: boolean
   isDestockage?: boolean
+  ribbonText?: string
+  ribbonColor?: string
 }): Promise<{ success: boolean; product?: Product; error?: string }> {
   try {
     const product = await ProductService.createProduct(data)
@@ -53,6 +55,8 @@ export async function updateProductAction(
     isNew?: boolean
     isPromotion?: boolean
     isDestockage?: boolean
+    ribbonText?: string
+    ribbonColor?: string
   }
 ): Promise<{ success: boolean; product?: Product; error?: string }> {
   try {

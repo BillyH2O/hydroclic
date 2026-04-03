@@ -23,10 +23,12 @@ model Product {
   discount    Int?     // Pourcentage de réduction (0-100)
   category    String?  // nouveaute, promotion, destockage, etc.
   productType String?  // hydrodistribution, sanitaire, etc.
-  isNew       Boolean  @default(false)
-  isPromotion Boolean  @default(false)
-  isDestockage Boolean @default(false)
-  createdAt   DateTime @default(now())
+  isNew        Boolean  @default(false)
+  isPromotion  Boolean  @default(false)
+  isDestockage Boolean  @default(false)
+  ribbonText   String?  // Texte du ruban (ex: -40%, Arrivage, Quantité limitée)
+  ribbonColor  String?  // Couleur du ruban (ex: red, blue, green, orange, purple)
+  createdAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   cartItems   CartItem[]

@@ -3,6 +3,7 @@ import { Lexend } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
 import { frFR } from "@clerk/localizations";
 import "./globals.css";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 
 const lexend = Lexend({
   variable: "--font-lexend",
@@ -39,6 +40,7 @@ export default function RootLayout({
           className={`${lexend.variable} font-sans antialiased`}
         >
           {children}
+          <WhatsAppFloat phone={process.env.WHATSAPP_NUMBER} />
         </body>
       </html>
     </ClerkProvider>

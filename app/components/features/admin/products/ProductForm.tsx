@@ -47,6 +47,8 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
     isNew: false,
     isPromotion: false,
     isDestockage: false,
+    ribbonText: '',
+    ribbonColor: 'red',
   })
 
   useEffect(() => {
@@ -66,6 +68,8 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         isNew: product.isNew || false,
         isPromotion: product.isPromotion || false,
         isDestockage: product.isDestockage || false,
+        ribbonText: product.ribbonText || '',
+        ribbonColor: product.ribbonColor || 'red',
       })
     }
   }, [product])
@@ -93,6 +97,8 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         discount: formData.discount || undefined,
         category: formData.category || undefined,
         productType: formData.productType || undefined,
+        ribbonText: formData.ribbonText || undefined,
+        ribbonColor: formData.ribbonText ? (formData.ribbonColor || 'red') : undefined,
       }
 
       let result

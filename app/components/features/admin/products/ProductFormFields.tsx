@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProductCategory } from '@/lib/types/product'
+import { ProductCategory, RIBBON_COLORS } from '@/lib/types/product'
 
 interface ProductFormFieldsProps {
   formData: {
@@ -17,6 +17,8 @@ interface ProductFormFieldsProps {
     isNew: boolean
     isPromotion: boolean
     isDestockage: boolean
+    ribbonText: string
+    ribbonColor: string
   }
   onFieldChange: (field: string, value: unknown) => void
 }
@@ -233,6 +235,61 @@ export default function ProductFormFields({ formData, onFieldChange }: ProductFo
           />
           <span className="text-sm text-gray-700">Destockage</span>
         </label>
+      </div>
+
+      {/* Ruban */}
+      <div className="border border-gray-200 rounded-lg p-4 space-y-3">
+        <p className="text-sm font-medium text-gray-700">Ruban promotionnel</p>
+
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">
+            Texte du ruban
+          </label>
+          <input
+            type="text"
+            value={formData.ribbonText}
+            onChange={(e) => onFieldChange('ribbonText', e.target.value)}
+            placeholder="ex : -40%, Arrivage, Quantité limitée"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+          />
+          <p className="text-xs text-gray-500 mt-1">Laisser vide pour ne pas afficher de ruban.</p>
+        </div>
+
+        {formData.ribbonText && (
+          <div>
+            <label className="block text-sm text-gray-600 mb-2">Couleur</label>
+            <div className="flex flex-wrap gap-2">
+              {RIBBON_COLORS.map((c) => (
+                <button
+                  key={c.value}
+                  type="button"
+                  onClick={() => onFieldChange('ribbonColor', c.value)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all ${c.bg} ${c.text} ${
+                    formData.ribbonColor === c.value
+                      ? 'border-gray-900 scale-110 shadow-md'
+                      : 'border-transparent opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {formData.ribbonText && (
+          <div className="mt-2">
+            <p className="text-xs text-gray-500 mb-1">Aperçu :</p>
+            {(() => {
+              const color = RIBBON_COLORS.find((c) => c.value === formData.ribbonColor) ?? RIBBON_COLORS[0]
+              return (
+                <span className={`inline-block px-3 py-1 rounded text-xs font-bold ${color.bg} ${color.text}`}>
+                  {formData.ribbonText}
+                </span>
+              )
+            })()}
+          </div>
+        )}
       </div>
     </div>
   )
