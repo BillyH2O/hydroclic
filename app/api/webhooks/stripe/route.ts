@@ -153,74 +153,35 @@ export async function POST(request: NextRequest) {
 
         console.log(`[webhooks/stripe] ✅ Order created: ${order.id}`)
 
-        // Créer la facture Stripe (nécessite un Customer : customer_creation: 'always' sur Checkout)
+        // Récupérer la facture Stripe auto-générée (invoice_creation: enabled sur Checkout)
         let invoicePdfUrl: string | null = null
         let invoiceHostedUrl: string | null = null
 
-        const resolveStripeCustomerId = async (): Promise<string | null> => {
-          const c = session.customer
-          if (c) {
-            return typeof c === 'string' ? c : c.id
-          }
-          const refreshed = await stripe.checkout.sessions.retrieve(session.id)
-          const rc = refreshed.customer
-          if (!rc) return null
-          return typeof rc === 'string' ? rc : rc.id
-        }
+        try {
+          // session.invoice est défini quand invoice_creation: { enabled: true } est configuré
+          const invoiceId = typeof session.invoice === 'string'
+            ? session.invoice
+            : (session.invoice as Stripe.Invoice | null)?.id ?? null
 
-        const stripeCustomerId = await resolveStripeCustomerId()
+          if (invoiceId) {
+            console.log(`[webhooks/stripe] 🧾 Retrieving auto-generated invoice: ${invoiceId}`)
+            const invoice = await stripe.invoices.retrieve(invoiceId)
 
-        if (stripeCustomerId) {
-          try {
-            console.log(`[webhooks/stripe] 🧾 Creating Stripe Invoice for customer: ${stripeCustomerId}`)
-
-            // Créer les invoice items
-            await Promise.all(
-              order.items.map(async (item) => {
-                const productName = item.product?.name || 'Produit'
-                await stripe.invoiceItems.create({
-                  customer: stripeCustomerId,
-                  amount: Math.round(item.price * item.quantity * 100), // Convertir en centimes
-                  currency: 'eur',
-                  description: `${productName} × ${item.quantity}`,
-                })
-              })
-            )
-
-            // Créer la facture
-            const invoice = await stripe.invoices.create({
-              customer: stripeCustomerId,
-              auto_advance: false,
-              description: `Facture pour la commande ${order.id}`,
-              metadata: {
-                orderId: order.id,
-              },
-            })
-
-            // Finaliser la facture pour générer le PDF
-            const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id)
-            
-            // Marquer comme payée si nécessaire
-            let paidInvoice = finalizedInvoice
-            if (finalizedInvoice.status === 'open') {
-              paidInvoice = await stripe.invoices.pay(finalizedInvoice.id, {
-                paid_out_of_band: true,
-              })
+            // La facture doit être finalisée pour avoir un PDF
+            let finalInvoice = invoice
+            if (invoice.status === 'draft') {
+              finalInvoice = await stripe.invoices.finalizeInvoice(invoice.id)
             }
 
-            invoicePdfUrl = paidInvoice.invoice_pdf || null
-            invoiceHostedUrl = paidInvoice.hosted_invoice_url || null
+            invoicePdfUrl = finalInvoice.invoice_pdf || null
+            invoiceHostedUrl = finalInvoice.hosted_invoice_url || null
 
-            console.log(`[webhooks/stripe] ✅ Invoice created: ${paidInvoice.id}`)
             console.log(`[webhooks/stripe] ✅ Invoice PDF: ${invoicePdfUrl}`)
-          } catch (invoiceError) {
-            console.error('[webhooks/stripe] ⚠️ Failed to create Stripe Invoice:', invoiceError)
-            // Ne pas faire échouer le webhook si la facture échoue
+          } else {
+            console.warn('[webhooks/stripe] No invoice on session (invoice_creation not enabled or not yet available)')
           }
-        } else {
-          console.warn(
-            '[webhooks/stripe] No Stripe customer on session; invoice PDF skipped. Use customer_creation: always on Checkout.',
-          )
+        } catch (invoiceError) {
+          console.error('[webhooks/stripe] ⚠️ Failed to retrieve invoice:', invoiceError)
         }
 
         // Envoyer l'email de confirmation
