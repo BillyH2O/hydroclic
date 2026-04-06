@@ -5,7 +5,7 @@ import { Footer } from '@/components/layout/footer'
 export default function NotFound() {
   return (
     <div className="w-full min-h-screen bg-zinc-50 font-sans">
-      <Navbar />
+      <Navbar solid />
       
       <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>

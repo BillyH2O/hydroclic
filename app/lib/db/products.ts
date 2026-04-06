@@ -49,25 +49,25 @@ export async function getAllProducts(): Promise<Product[]> {
 }
 
 /**
- * Récupère un produit par son ID ou son slug
+ * Récupère un produit par son ID (UUID) ou son slug.
+ * On effectue les deux recherches indépendamment afin qu'une erreur UUID invalide
+ * (format non-UUID passé à findUnique) n'empêche pas la recherche par slug.
  */
 export async function getProductById(id: string): Promise<Product | null> {
+  // 1. Recherche par UUID (peut échouer si `id` n'est pas un UUID valide)
   try {
-    // Essayer d'abord par ID
-    let product = await prisma.product.findUnique({
-      where: { id },
-    })
-    
-    // Si pas trouvé par ID, essayer par slug (slug est unique dans le schéma)
-    if (!product) {
-      product = await prisma.product.findFirst({
-        where: { slug: id },
-      })
-    }
-    
+    const product = await prisma.product.findUnique({ where: { id } })
+    if (product) return mapDbProductToProduct(product)
+  } catch {
+    // id n'est pas un UUID valide → on continue avec la recherche par slug
+  }
+
+  // 2. Recherche par slug
+  try {
+    const product = await prisma.product.findFirst({ where: { slug: id } })
     return product ? mapDbProductToProduct(product) : null
   } catch (error) {
-    console.error('Error fetching product by id:', error)
+    console.error('Error fetching product by slug:', error)
     return null
   }
 }
@@ -268,13 +268,27 @@ export async function updateProduct(
   }
 ): Promise<Product> {
   try {
+    // Mise à jour champ par champ (comme createProduct) pour éviter tout spread
+    // qui pourrait inclure des champs non attendus ou effacer des valeurs unique (@unique slug/sku).
     const product = await prisma.product.update({
       where: { id },
       data: {
-        ...data,
-        image: data.image || undefined,
-        ribbonText: data.ribbonText ?? null,
-        ribbonColor: data.ribbonColor ?? null,
+        ...(data.name !== undefined      && { name: data.name }),
+        ...(data.slug !== undefined      && { slug: data.slug || null }),
+        ...(data.sku  !== undefined      && { sku:  data.sku  || null }),
+        ...(data.priceB2C !== undefined  && { priceB2C: data.priceB2C }),
+        ...(data.priceB2B !== undefined  && { priceB2B: data.priceB2B }),
+        ...(data.image                   && { image: data.image }),
+        ...(data.imageAlt !== undefined  && { imageAlt: data.imageAlt }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.discount !== undefined  && { discount: data.discount }),
+        ...(data.category !== undefined  && { category: data.category || null }),
+        ...(data.productType !== undefined && { productType: data.productType || null }),
+        ...(data.isNew !== undefined     && { isNew: data.isNew }),
+        ...(data.isPromotion !== undefined && { isPromotion: data.isPromotion }),
+        ...(data.isDestockage !== undefined && { isDestockage: data.isDestockage }),
+        ribbonText: data.ribbonText || null,
+        ribbonColor: data.ribbonColor || null,
       },
     })
     return mapDbProductToProduct(product)

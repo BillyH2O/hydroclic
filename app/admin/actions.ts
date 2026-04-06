@@ -63,7 +63,10 @@ export async function updateProductAction(
     const product = await ProductService.updateProduct(id, data)
     revalidatePath('/admin')
     revalidatePath('/admin/catalogue')
+    // Invalider par UUID et par slug (le produit peut être accessible via l'un ou l'autre)
     revalidatePath(`/produit/${id}`)
+    if (product.slug) revalidatePath(`/produit/${product.slug}`)
+    revalidatePath('/catalogue')
     revalidatePath('/')
     return { success: true, product }
   } catch (error) {

@@ -42,29 +42,37 @@ export const Navbar = ({ solid = false, noMarginBottom = false }: NavbarProps) =
   const { isSignedIn } = useUser();
 
   useEffect(() => {
-    // Utiliser setTimeout pour éviter l'appel synchrone de setState
     const timer = setTimeout(() => {
       setIsMounted(true);
     }, 0);
-    
+
+    // Scroll → passage transparent / blanc : uniquement sur la landing (solid = false)
+    if (solid) {
+      return () => clearTimeout(timer);
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [solid]);
 
   const isSolid = solid || isScrolled;
 
   return (
     <>
     <section
-      className={`py-4 px-4 md:px-10 xl:px-20 w-full fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isSolid ? "bg-white/45 backdrop-blur-md shadow-sm" : "bg-transparent"
+      className={`py-4 px-4 md:px-10 xl:px-20 w-full fixed top-0 left-0 right-0 z-50 ${
+        solid
+          ? "bg-white border-b border-gray-200/90 shadow-sm"
+          : `transition-all duration-300 ${
+              isSolid ? "bg-white/45 backdrop-blur-md shadow-sm" : "bg-transparent"
+            }`
       }`}
     >
       <div className="container mx-auto">
