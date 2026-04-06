@@ -124,6 +124,9 @@ export class PaymentService {
           },
         },
       ],
+      invoice_creation: {
+        enabled: true,
+      },
     })
 
     return {

@@ -67,7 +67,7 @@ export default function CheckoutSuccessClient({ sessionId }: CheckoutSuccessClie
             {(sessionData.amountTotal / 100).toFixed(2)} €
           </p>
         )}
-        <p>
+        <p className="break-all">
           <span className="font-medium">Numéro de session :</span> {sessionId}
         </p>
       </div>
