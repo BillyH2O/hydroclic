@@ -147,6 +147,28 @@ ${data.message}
   }
 
   /**
+   * Télécharge le PDF depuis l’URL Stripe (lien signé) pour pièce jointe.
+   */
+  private static async fetchInvoicePdfBuffer(url: string): Promise<Buffer | null> {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 25_000)
+      const res = await fetch(url, { signal: controller.signal })
+      clearTimeout(timeout)
+      if (!res.ok) {
+        console.warn('[EmailService] fetch invoice PDF failed:', res.status)
+        return null
+      }
+      const buf = Buffer.from(await res.arrayBuffer())
+      if (buf.length < 100) return null
+      return buf
+    } catch (e) {
+      console.warn('[EmailService] fetch invoice PDF error:', e)
+      return null
+    }
+  }
+
+  /**
    * Envoie un email de confirmation de commande avec les détails et la facture
    */
   static async sendOrderConfirmationEmail(data: {
@@ -178,6 +200,22 @@ ${data.message}
           `• ${item.name} × ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}${currencySymbol}`
       )
       .join('\n')
+
+    let attachments: SendMailParams['attachments'] | undefined
+    if (data.invoicePdfUrl) {
+      const pdfBuf = await this.fetchInvoicePdfBuffer(data.invoicePdfUrl)
+      if (pdfBuf) {
+        attachments = [
+          {
+            filename: `facture-${orderNumber}.pdf`,
+            content: pdfBuf,
+            contentType: 'application/pdf',
+          },
+        ]
+      }
+    }
+
+    const hasPdfAttachment = Boolean(attachments?.length)
 
     const htmlCustomer = `
       <div style="font-family:system-ui,Arial,sans-serif;font-size:14px;line-height:1.6;max-width:600px;margin:0 auto">
@@ -228,11 +266,13 @@ ${data.message}
           </p>
         </div>
 
-        ${data.invoicePdfUrl ? `
+        ${data.invoicePdfUrl || hasPdfAttachment ? `
         <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:16px;margin:20px 0;text-align:center">
           <p style="margin:0 0 12px 0;color:#1e40af;font-weight:600">📄 Votre facture</p>
-          <a href="${data.invoicePdfUrl}" style="display:inline-block;background:#2563eb;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:500">Télécharger la facture PDF</a>
-          ${data.invoiceHostedUrl ? `<p style="margin:12px 0 0 0;font-size:12px"><a href="${data.invoiceHostedUrl}" style="color:#2563eb">Voir la facture en ligne</a></p>` : ''}
+          ${hasPdfAttachment ? `<p style="margin:0 0 12px 0;font-size:14px;color:#1e3a8a">La facture au format PDF est <strong>jointe à cet e-mail</strong> (pièces jointes).</p>` : ''}
+          ${!hasPdfAttachment && data.invoicePdfUrl ? `<a href="${data.invoicePdfUrl}" style="display:inline-block;background:#2563eb;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:500">Télécharger la facture PDF</a>` : ''}
+          ${hasPdfAttachment && data.invoicePdfUrl ? `<p style="margin:12px 0 0 0;font-size:12px;color:#64748b">Lien de secours : <a href="${data.invoicePdfUrl}" style="color:#2563eb">télécharger</a></p>` : ''}
+          ${data.invoiceHostedUrl ? `<p style="margin:12px 0 0 0;font-size:12px"><a href="${data.invoiceHostedUrl}" style="color:#2563eb">Voir la facture en ligne (Stripe)</a></p>` : ''}
         </div>
         ` : ''}
 
@@ -263,7 +303,7 @@ ${data.billingAddressSummary ? `Adresse de facturation:\n${data.billingAddressSu
 ${itemsList}
 
 Total payé: ${orderTotal}${currencySymbol}
-${data.invoicePdfUrl ? `\nVotre facture: ${data.invoicePdfUrl}\n` : ''}
+${hasPdfAttachment ? '\nVotre facture PDF est en pièce jointe.\n' : ''}${data.invoicePdfUrl ? `\nFacture (lien): ${data.invoicePdfUrl}\n` : ''}
 Merci pour votre confiance !
 
 Cordialement,
@@ -274,6 +314,7 @@ Hydroclic`
       subject: `Confirmation de commande ${orderNumber}`,
       html: htmlCustomer,
       text: textCustomer,
+      attachments,
     })
   }
 }
