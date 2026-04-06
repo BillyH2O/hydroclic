@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
+import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { CartItem } from '@/lib/types/payment'
+import { useAccountType } from '@/lib/hooks/useAccountType'
 
 interface CheckoutButtonProps {
   items: CartItem[]
@@ -17,6 +19,8 @@ export default function CheckoutButton({
   disabled = false,
 }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const { user } = useUser()
+  const accountType = useAccountType()
 
   const handleCheckout = async () => {
     if (items.length === 0 || disabled) return
@@ -25,13 +29,18 @@ export default function CheckoutButton({
 
     try {
       // Préparer les données pour l'API
-      const checkoutData = {
+      const checkoutData: Record<string, unknown> = {
         items: items.map((item) => ({
           productId: item.product.id,
           quantity: item.quantity,
         })),
         successUrl: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/checkout/cancel`,
+      }
+      // Invités : même tarif que le panier (localStorage), le serveur ne voit pas Clerk
+      if (!user) {
+        checkoutData.accountType =
+          accountType === 'professionnel' ? 'professionnel' : 'particulier'
       }
 
       // Appeler l'API pour créer la session de checkout

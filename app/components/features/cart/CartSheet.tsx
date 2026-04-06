@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/lib/hooks/useCart'
-import { useUser } from '@clerk/nextjs'
+import { useAccountType } from '@/lib/hooks/useAccountType'
 import CheckoutButton from '@/components/features/payment/CheckoutButton'
 import SafeImage from '@/components/ui/SafeImage'
 import { formatPrice, getProductPrice } from '@/lib/utils'
@@ -17,22 +17,9 @@ interface CartSheetProps {
 
 export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
   const { items, total, isLoading, updateQuantity, removeFromCart } = useCart()
-  const { user } = useUser()
+  const accountType = useAccountType()
   const [isAnimating, setIsAnimating] = useState(false)
   const [mounted, setMounted] = useState(false)
-
-  // Récupérer le type de compte (depuis user ou localStorage pour non-connectés)
-  const accountType = useMemo((): 'particulier' | 'professionnel' | undefined => {
-    if (user) {
-      return user.publicMetadata?.accountType as 'particulier' | 'professionnel' | undefined
-    }
-    // Pour les utilisateurs non connectés, vérifier localStorage
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('accountType')
-      return (stored === 'particulier' || stored === 'professionnel') ? stored : 'particulier'
-    }
-    return 'particulier' // Par défaut
-  }, [user])
 
   useEffect(() => {
     // Utiliser setTimeout pour éviter l'appel synchrone de setState

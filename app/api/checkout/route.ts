@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     // Valider les données de la requête
-    const { items, successUrl, cancelUrl } = body
+    const { items, successUrl, cancelUrl, accountType: bodyAccountType } = body
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -33,8 +33,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Déterminer le type de compte pour le prix
-    const accountType = user?.publicMetadata?.accountType as 'particulier' | 'professionnel' | undefined
+    // Prix : Clerk pour les connectés ; invités = accountType envoyé (aligné sur localStorage / panier)
+    const clerkType = user?.publicMetadata?.accountType as
+      | 'particulier'
+      | 'professionnel'
+      | undefined
+    const accountType: 'particulier' | 'professionnel' | undefined = user
+      ? clerkType
+      : bodyAccountType === 'professionnel'
+        ? 'professionnel'
+        : 'particulier'
 
     // Récupérer les produits complets depuis la base de données
     const cartItems: CartItem[] = []
