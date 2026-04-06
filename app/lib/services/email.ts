@@ -21,7 +21,9 @@ export class EmailService {
   private static transporter: nodemailer.Transporter | null = null
 
   /**
-   * Initialise le transporteur email
+   * Initialise le transporteur email (SMTP configurable par variables d’environnement).
+   * Défaut : Hostinger — smtp.hostinger.com:465 SSL
+   * Gmail exemple : SMTP_HOST=smtp.gmail.com SMTP_PORT=587 SMTP_SECURE=false
    */
   private static getTransporter(): nodemailer.Transporter {
     if (!this.transporter) {
@@ -32,22 +34,26 @@ export class EmailService {
         throw new Error('EMAIL_USER et EMAIL_PASSWORD doivent être définis dans les variables d\'environnement')
       }
 
+      const host = process.env.SMTP_HOST?.trim() || 'smtp.hostinger.com'
+      const port = parseInt(process.env.SMTP_PORT || '465', 10)
+      const secure =
+        process.env.SMTP_SECURE !== undefined && process.env.SMTP_SECURE !== ''
+          ? process.env.SMTP_SECURE === 'true' || process.env.SMTP_SECURE === '1'
+          : port === 465
+
       this.transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // true pour le port 465, false pour les autres ports
+        host,
+        port,
+        secure,
         auth: {
           user: emailUser,
           pass: emailPassword,
         },
         tls: {
-          // Ne pas rejeter les certificats non autorisés en développement
-          // En production, laisser la vérification par défaut
           rejectUnauthorized: process.env.NODE_ENV === 'production',
         },
-        // Options supplémentaires pour éviter les problèmes de certificat
-        requireTLS: true,
-        connectionTimeout: 10000, // 10 secondes
+        ...(secure ? {} : { requireTLS: true }),
+        connectionTimeout: 10000,
         greetingTimeout: 10000,
       })
     }
