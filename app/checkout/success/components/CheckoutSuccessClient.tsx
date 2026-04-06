@@ -1,16 +1,28 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useCart } from '@/lib/hooks/useCart'
 
 interface CheckoutSuccessClientProps {
   sessionId: string
 }
 
 export default function CheckoutSuccessClient({ sessionId }: CheckoutSuccessClientProps) {
+  const { clearCart } = useCart()
+  const clearedRef = useRef(false)
   const [sessionData, setSessionData] = useState<{
     amountTotal: number | null
     customerEmail: string | null
   } | null>(null)
+
+  // Vider le panier local ou serveur après paiement réussi (Stripe redirige ici avec session_id)
+  useEffect(() => {
+    if (!sessionId || clearedRef.current) return
+    clearedRef.current = true
+    void clearCart().catch((err) => {
+      console.error('[CheckoutSuccess] Impossible de vider le panier:', err)
+    })
+  }, [sessionId, clearCart])
 
   useEffect(() => {
     // Récupérer les détails de la session
