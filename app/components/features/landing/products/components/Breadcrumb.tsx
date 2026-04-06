@@ -15,8 +15,8 @@ export const Breadcrumb = ({ product }: { product: Product | null }) => {
             </li>
             <li>/</li>
             <li>
-              <Link href="/produits" className="hover:text-gray-900 transition-colors">
-                Produits
+              <Link href="/catalogue" className="hover:text-gray-900 transition-colors">
+                Catalogue
               </Link>
             </li>
             <li>/</li>
