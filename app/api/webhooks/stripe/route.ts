@@ -7,6 +7,11 @@ import {
   checkoutAddressSnapshots,
   formatCheckoutAddressesForEmail,
 } from '@/lib/stripe/checkoutAddresses'
+import {
+  parseDeliveryMethod,
+  pickupShippingAddressSnapshot,
+  pickupShippingSummaryText,
+} from '@/lib/constants/delivery'
 
 /**
  * API Route pour gérer les webhooks Stripe
@@ -75,6 +80,18 @@ export async function POST(request: NextRequest) {
 
         const addrSnap = checkoutAddressSnapshots(session)
         const addrEmail = formatCheckoutAddressesForEmail(session)
+        const deliveryMethod = parseDeliveryMethod(session.metadata?.deliveryMethod)
+        const isPickup = deliveryMethod === 'pickup'
+
+        const shippingAddressForOrder = isPickup
+          ? pickupShippingAddressSnapshot()
+          : addrSnap.shippingAddress
+            ? (addrSnap.shippingAddress as object)
+            : undefined
+
+        const shippingSummaryForEmail = isPickup
+          ? pickupShippingSummaryText()
+          : addrEmail.shippingSummary || undefined
 
         // Créer la commande dans la base de données
         const order = await prisma.order.create({
@@ -84,14 +101,13 @@ export async function POST(request: NextRequest) {
             status: 'paid',
             totalAmount,
             currency: session.currency || 'eur',
+            deliveryMethod,
             customerEmail: email,
             customerPhone: addrSnap.customerPhone,
             billingAddress: addrSnap.billingAddress
               ? (addrSnap.billingAddress as object)
               : undefined,
-            shippingAddress: addrSnap.shippingAddress
-              ? (addrSnap.shippingAddress as object)
-              : undefined,
+            shippingAddress: shippingAddressForOrder,
             items: {
               create: await Promise.all(
                 lineItems.data.map(async (lineItem, index) => {
@@ -196,8 +212,9 @@ export async function POST(request: NextRequest) {
               customerEmail: email,
               customerName: session.customer_details?.name || undefined,
               customerPhone: addrEmail.customerPhone,
+              deliveryMethod,
               billingAddressSummary: addrEmail.billingSummary || undefined,
-              shippingAddressSummary: addrEmail.shippingSummary || undefined,
+              shippingAddressSummary: shippingSummaryForEmail,
               items: order.items.map((item) => ({
                 name: item.product?.name || 'Produit',
                 quantity: item.quantity,

@@ -177,6 +177,8 @@ ${data.message}
     customerEmail: string
     customerName?: string
     customerPhone?: string
+    /** home | pickup — titre du bloc livraison / retrait */
+    deliveryMethod?: string
     billingAddressSummary?: string
     shippingAddressSummary?: string
     items: Array<{
@@ -250,7 +252,7 @@ ${data.message}
 
         ${data.shippingAddressSummary ? `
         <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
-          <h3 style="margin:0 0 12px 0;color:#1a1a1a">Adresse de livraison</h3>
+          <h3 style="margin:0 0 12px 0;color:#1a1a1a">${data.deliveryMethod === 'pickup' ? 'Retrait au dépôt (click & collect)' : 'Adresse de livraison'}</h3>
           <pre style="white-space:pre-wrap;font-family:inherit;margin:0;font-size:14px">${data.shippingAddressSummary.replace(/</g, '&lt;')}</pre>
         </div>
         ` : ''}
@@ -299,7 +301,7 @@ Vos informations de contact:
 - Email: ${data.customerEmail}
 ${data.customerPhone ? `- Téléphone: ${data.customerPhone}` : ''}
 
-${data.billingAddressSummary ? `Adresse de facturation:\n${data.billingAddressSummary}\n\n` : ''}${data.shippingAddressSummary ? `Adresse de livraison:\n${data.shippingAddressSummary}\n\n` : ''}Articles commandés:
+${data.billingAddressSummary ? `Adresse de facturation:\n${data.billingAddressSummary}\n\n` : ''}${data.shippingAddressSummary ? `${data.deliveryMethod === 'pickup' ? 'Retrait au dépôt (click & collect)' : 'Adresse de livraison'}:\n${data.shippingAddressSummary}\n\n` : ''}Articles commandés:
 ${itemsList}
 
 Total payé: ${orderTotal}${currencySymbol}

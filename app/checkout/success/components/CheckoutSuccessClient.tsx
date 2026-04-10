@@ -13,6 +13,7 @@ export default function CheckoutSuccessClient({ sessionId }: CheckoutSuccessClie
   const [sessionData, setSessionData] = useState<{
     amountTotal: number | null
     customerEmail: string | null
+    deliveryMethod: string | null
   } | null>(null)
 
   // Vider le panier local ou serveur après paiement réussi (Stripe redirige ici avec session_id)
@@ -34,6 +35,7 @@ export default function CheckoutSuccessClient({ sessionId }: CheckoutSuccessClie
           setSessionData({
             amountTotal: data.amountTotal,
             customerEmail: data.customerEmail,
+            deliveryMethod: data.deliveryMethod ?? null,
           })
         }
       } catch (error) {
@@ -65,6 +67,18 @@ export default function CheckoutSuccessClient({ sessionId }: CheckoutSuccessClie
           <p>
             <span className="font-medium">Montant total :</span>{' '}
             {(sessionData.amountTotal / 100).toFixed(2)} €
+          </p>
+        )}
+        {sessionData.deliveryMethod === 'pickup' && (
+          <p>
+            <span className="font-medium">Livraison :</span> retrait au dépôt (86 bd Félix Faure,
+            93300 Aubervilliers)
+          </p>
+        )}
+        {sessionData.deliveryMethod === 'home' && (
+          <p>
+            <span className="font-medium">Livraison :</span> à domicile (adresse indiquée au
+            paiement)
           </p>
         )}
         <p className="break-all">

@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
       customerEmail: session.customer_email,
       paymentStatus: session.payment_status,
       status: session.status,
+      deliveryMethod: session.metadata?.deliveryMethod ?? 'home',
     })
   } catch (error) {
     console.error('Error fetching checkout session:', error)

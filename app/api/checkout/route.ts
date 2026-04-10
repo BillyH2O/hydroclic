@@ -5,6 +5,7 @@ import { CartItem } from '@/lib/types/payment'
 import { Product } from '@/lib/types/product'
 import { getProductById } from '@/lib/db/products'
 import { getProductPrice } from '@/lib/utils'
+import { parseDeliveryMethod } from '@/lib/constants/delivery'
 
 /**
  * API Route pour créer une session de checkout Stripe
@@ -17,7 +18,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     // Valider les données de la requête
-    const { items, successUrl, cancelUrl, accountType: bodyAccountType } = body
+    const {
+      items,
+      successUrl,
+      cancelUrl,
+      accountType: bodyAccountType,
+      deliveryMethod: bodyDeliveryMethod,
+    } = body
+
+    const deliveryMethod = parseDeliveryMethod(bodyDeliveryMethod)
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -87,11 +96,13 @@ export async function POST(request: NextRequest) {
         customerEmail: user?.emailAddresses?.[0]?.emailAddress || undefined,
         successUrl,
         cancelUrl,
+        deliveryMethod,
       },
       {
         userId: userId || undefined,
         accountType: accountType || undefined,
         productIds: productIds, // Stocker les productIds pour le webhook
+        deliveryMethod,
       }
     )
 

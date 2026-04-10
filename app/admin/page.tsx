@@ -2,7 +2,7 @@ import { ProductService } from '@/lib/services/products'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { AdminDashboard, AdminNavCard } from '@/components/features/admin'
-import { BarChart3, Package } from 'lucide-react'
+import { BarChart3, Package, Truck } from 'lucide-react'
 
 /**
  * Page d'accueil de l'administration
@@ -26,7 +26,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Cartes de navigation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <AdminNavCard
             title="Dashboard"
             description="Consultez les statistiques générales sur vos produits, catégories et performances."
@@ -42,6 +42,14 @@ export default async function AdminPage() {
             icon={Package}
             iconColor="text-green-600"
             bgGradient="from-green-50 to-green-100"
+          />
+          <AdminNavCard
+            title="Frais de livraison"
+            description="Montant des frais de port et seuil pour la livraison gratuite (domicile uniquement)."
+            href="/admin/livraison"
+            icon={Truck}
+            iconColor="text-orange-600"
+            bgGradient="from-orange-50 to-amber-100"
           />
         </div>
 

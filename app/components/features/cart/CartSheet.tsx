@@ -9,6 +9,30 @@ import CheckoutButton from '@/components/features/payment/CheckoutButton'
 import SafeImage from '@/components/ui/SafeImage'
 import { formatPrice, getProductPrice } from '@/lib/utils'
 import { ProductService } from '@/lib/services/products'
+import { PICKUP_LOCATION_SUMMARY_LINES, type DeliveryMethod } from '@/lib/constants/delivery'
+
+type ShippingRules = {
+  freeShippingThresholdEur: number | null
+  shippingFeeEur: number
+}
+
+function homeShippingHint(subtotal: number, rules: ShippingRules | null): string | null {
+  if (!rules) return null
+  const { freeShippingThresholdEur, shippingFeeEur } = rules
+  if (freeShippingThresholdEur != null && subtotal >= freeShippingThresholdEur) {
+    return 'Livraison à domicile offerte pour ce panier.'
+  }
+  if (freeShippingThresholdEur != null) {
+    const remaining = freeShippingThresholdEur - subtotal
+    if (remaining > 0.009) {
+      return `Encore ${formatPrice(remaining)} pour la livraison offerte (sinon ${formatPrice(shippingFeeEur)} de frais).`
+    }
+  }
+  if (shippingFeeEur <= 0) {
+    return 'Pas de frais de livraison à domicile.'
+  }
+  return `Frais de livraison à domicile : ${formatPrice(shippingFeeEur)}.`
+}
 
 interface CartSheetProps {
   open: boolean
@@ -18,8 +42,32 @@ interface CartSheetProps {
 export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
   const { items, total, isLoading, updateQuantity, removeFromCart } = useCart()
   const accountType = useAccountType()
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('home')
+  const [shippingRules, setShippingRules] = useState<ShippingRules | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    void fetch('/api/shipping-rules')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: ShippingRules | null) => {
+        if (!cancelled && data && typeof data.shippingFeeEur === 'number') {
+          setShippingRules({
+            freeShippingThresholdEur:
+              data.freeShippingThresholdEur === null ||
+              data.freeShippingThresholdEur === undefined
+                ? null
+                : Number(data.freeShippingThresholdEur),
+            shippingFeeEur: Number(data.shippingFeeEur),
+          })
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     // Utiliser setTimeout pour éviter l'appel synchrone de setState
@@ -68,6 +116,8 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
   }
 
   if (!open || !mounted) return null
+
+  const homeDeliveryHint = homeShippingHint(total, shippingRules)
 
   const content = (
     <div
@@ -210,14 +260,71 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
           {/* Footer avec total et bouton de paiement */}
           {items.length > 0 && (
-            <div className="border-t border-gray-200 p-6 bg-white">
-              <div className="flex items-center justify-between mb-4">
+            <div className="border-t border-gray-200 p-6 bg-white space-y-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-900 mb-2">Mode de livraison</p>
+                <div className="space-y-2">
+                  <label
+                    className={`flex cursor-pointer gap-3 rounded-lg border p-3 transition-colors ${
+                      deliveryMethod === 'home'
+                        ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="delivery"
+                      className="mt-1"
+                      checked={deliveryMethod === 'home'}
+                      onChange={() => setDeliveryMethod('home')}
+                    />
+                    <span className="text-sm text-gray-800">
+                      <span className="font-medium block">Livraison à domicile</span>
+                      <span className="text-gray-600">
+                        Adresse de livraison saisie au paiement.
+                        {homeDeliveryHint ? (
+                          <span className="block text-xs mt-1.5 text-gray-500">
+                            {homeDeliveryHint}
+                          </span>
+                        ) : null}
+                      </span>
+                    </span>
+                  </label>
+                  <label
+                    className={`flex cursor-pointer gap-3 rounded-lg border p-3 transition-colors ${
+                      deliveryMethod === 'pickup'
+                        ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="delivery"
+                      className="mt-1"
+                      checked={deliveryMethod === 'pickup'}
+                      onChange={() => setDeliveryMethod('pickup')}
+                    />
+                    <span className="text-sm text-gray-800">
+                      <span className="font-medium block">Click & collect — retrait au dépôt</span>
+                      <span className="text-gray-600 block mt-0.5">
+                        {PICKUP_LOCATION_SUMMARY_LINES.slice(1).join(', ')}
+                      </span>
+                      <span className="text-gray-500 text-xs mt-1 block">Sans frais de livraison.</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
                 <span className="text-lg font-semibold text-gray-900">Total</span>
                 <span className="text-xl font-bold text-gray-900">
                   {formatPrice(total)}
                 </span>
               </div>
-              <CheckoutButton items={items} className="w-full" />
+              <CheckoutButton
+                items={items}
+                className="w-full"
+                deliveryMethod={deliveryMethod}
+              />
             </div>
           )}
         </div>

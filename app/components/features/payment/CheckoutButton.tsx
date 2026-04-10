@@ -6,17 +6,20 @@ import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { CartItem } from '@/lib/types/payment'
 import { useAccountType } from '@/lib/hooks/useAccountType'
+import type { DeliveryMethod } from '@/lib/constants/delivery'
 
 interface CheckoutButtonProps {
   items: CartItem[]
   className?: string
   disabled?: boolean
+  deliveryMethod: DeliveryMethod
 }
 
 export default function CheckoutButton({
   items,
   className = '',
   disabled = false,
+  deliveryMethod,
 }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { user } = useUser()
@@ -42,6 +45,7 @@ export default function CheckoutButton({
         checkoutData.accountType =
           accountType === 'professionnel' ? 'professionnel' : 'particulier'
       }
+      checkoutData.deliveryMethod = deliveryMethod
 
       // Appeler l'API pour créer la session de checkout
       const response = await fetch('/api/checkout', {

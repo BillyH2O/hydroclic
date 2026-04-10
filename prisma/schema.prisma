@@ -10,6 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Paramètres boutique (singleton id = "default") — frais de livraison & seuil gratuit
+model StoreSettings {
+  id String @id @default("default")
+
+  /// Panier TTC (hors livraison) à partir de ce montant (≥) : livraison gratuite. Null = pas de palier gratuit.
+  freeShippingThresholdEur Float?
+  /// Frais de livraison (€) si le seuil n’est pas atteint (ou si aucun seuil).
+  shippingFeeEur           Float @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("store_settings")
+}
+
 model Product {
   id          String   @id @default(uuid())
   name        String
@@ -71,10 +85,12 @@ model Order {
   status          String   @default("pending") // pending, paid, cancelled, failed
   totalAmount     Float    // Montant total en euros
   currency        String   @default("eur")
+  /// home = livraison à domicile ; pickup = click & collect (dépôt Aubervilliers)
+  deliveryMethod  String   @default("home")
   customerEmail   String?
   customerPhone   String?
   billingAddress  Json?    // facturation (snapshot Stripe customer_details)
-  shippingAddress Json?    // livraison (snapshot Stripe shipping_details)
+  shippingAddress Json?    // livraison (snapshot Stripe) ou adresse du dépôt si pickup
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -95,4 +111,31 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id])
 
   @@map("order_items")
+}
+
+/// Conversation WhatsApp (client → numéro business) pour le suivi SLA « réponse sous 1 h ».
+model WhatsappConversation {
+  id             String    @id @default(uuid())
+  /// Identifiant WhatsApp du client (chiffres, sans +)
+  customerWaId   String    @unique
+  lastInboundAt  DateTime
+  lastReplyAt    DateTime?
+  /// Mis à jour à chaque message client (true) / réponse business (false)
+  needsReply     Boolean   @default(false)
+  /// Dernier délai SLA calculé (lastInboundAt + SLA)
+  slaDeadlineAt  DateTime
+  slaAlertSentAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([slaDeadlineAt])
+  @@map("whatsapp_conversations")
+}
+
+/// Idempotence des webhooks WhatsApp (wamid…)
+model WhatsappProcessedMessage {
+  waMessageId String   @id
+  createdAt   DateTime @default(now())
+
+  @@map("whatsapp_processed_messages")
 }

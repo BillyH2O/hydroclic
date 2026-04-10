@@ -1,6 +1,11 @@
 import Stripe from 'stripe'
 import { CartItem, CheckoutSessionData, PaymentMetadata } from '@/lib/types/payment'
 import { DEFAULT_CHECKOUT_SHIPPING_COUNTRIES } from '@/lib/stripe/checkoutAddresses'
+import type { DeliveryMethod } from '@/lib/constants/delivery'
+import {
+  computeShippingEuros,
+  getResolvedStoreShipping,
+} from '@/lib/db/storeSettings'
 
 /**
  * Service pour gérer les paiements Stripe
@@ -86,17 +91,29 @@ export class PaymentService {
       })
     }
 
-    const shippingCents = Math.max(
-      0,
-      parseInt(process.env.STRIPE_SHIPPING_CENTS ?? '0', 10) || 0,
-    )
-    const shippingLabel =
-      process.env.STRIPE_SHIPPING_LABEL?.trim() || 'Livraison standard (France / UE)'
+    const deliveryMethod: DeliveryMethod = data.deliveryMethod
+    const isPickup = deliveryMethod === 'pickup'
 
-    // Créer la session de checkout (e-commerce : facturation, livraison, téléphone)
+    const cartSubtotalEur = data.items.reduce((sum, item) => {
+      const price = item.product.price || item.product.priceB2C || 0
+      return sum + price * item.quantity
+    }, 0)
+
+    const shippingRules = await getResolvedStoreShipping()
+    const shippingEuro = !isPickup
+      ? computeShippingEuros(cartSubtotalEur, shippingRules)
+      : 0
+    const shippingCents = Math.round(Math.max(0, shippingEuro) * 100)
+
+    const baseShippingLabel =
+      process.env.STRIPE_SHIPPING_LABEL?.trim() || 'Livraison standard (France / UE)'
+    const shippingLabel =
+      !isPickup && shippingCents === 0 ? 'Livraison offerte' : baseShippingLabel
+
+    // Créer la session de checkout (e-commerce : facturation, livraison ou click & collect, téléphone)
     // customer_creation: 'always' → un Customer Stripe existe après paiement, nécessaire pour
     // créer une Invoice + PDF dans le webhook et inclure le lien dans l’e-mail de confirmation.
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
@@ -109,10 +126,16 @@ export class PaymentService {
       currency: 'eur',
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
-      shipping_address_collection: {
-        allowed_countries: DEFAULT_CHECKOUT_SHIPPING_COUNTRIES,
+      invoice_creation: {
+        enabled: true,
       },
-      shipping_options: [
+    }
+
+    if (!isPickup) {
+      sessionParams.shipping_address_collection = {
+        allowed_countries: DEFAULT_CHECKOUT_SHIPPING_COUNTRIES,
+      }
+      sessionParams.shipping_options = [
         {
           shipping_rate_data: {
             type: 'fixed_amount',
@@ -123,11 +146,10 @@ export class PaymentService {
             },
           },
         },
-      ],
-      invoice_creation: {
-        enabled: true,
-      },
-    })
+      ]
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
     return {
       sessionId: session.id,
