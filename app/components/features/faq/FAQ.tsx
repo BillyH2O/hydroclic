@@ -15,33 +15,45 @@ export default function FAQsThree() {
     const faqItems: FAQItem[] = [
         {
             id: 'item-1',
-            icon: 'clock',
-            question: 'What are your business hours?',
-            answer: 'Our customer service team is available Monday through Friday from 9:00 AM to 8:00 PM EST, and weekends from 10:00 AM to 6:00 PM EST. During holidays, hours may vary and will be posted on our website.',
+            icon: 'layout-grid',
+            question: 'Quels types de produits proposez-vous ?',
+            answer:
+                'Nous proposons une large gamme de produits en plomberie, en électricité, en climatisation, en solution de chauffage, en outillage et en sanitaire, adaptés aussi bien aux professionnels qu’aux particuliers.',
         },
         {
             id: 'item-2',
-            icon: 'credit-card',
-            question: 'Comment fonctionnent les paiements par abonnement ?',
-            answer: 'Subscription payments are automatically charged to your default payment method on the same day each month or year, depending on your billing cycle. You can update your payment information and view billing history in your account dashboard.',
+            icon: 'briefcase-business',
+            question: 'Travaillez-vous avec les professionnels ?',
+            answer:
+                'Oui, nous accompagnons régulièrement des artisans et entreprises avec des commandes récurrentes et un suivi personnalisé.',
         },
         {
             id: 'item-3',
-            icon: 'truck',
-            question: 'Peut-on accélérer la livraison ?',
-            answer: 'Yes, we offer several expedited shipping options at checkout. Next-day and 2-day shipping are available for most U.S. addresses if orders are placed before 2:00 PM EST. International expedited shipping options vary by destination.',
+            icon: 'shopping-bag',
+            question: 'Peut-on commander à distance ?',
+            answer:
+                'Oui, vous pouvez nous contacter pour préparer votre commande à l’avance et venir la récupérer rapidement en magasin.',
         },
         {
             id: 'item-4',
-            icon: 'globe',
-            question: 'Faut-il s\'adresser à la SAV ?',
-            answer: 'We offer multilingual support in English, Spanish, French, German, and Japanese. Our support team can assist customers in these languages via email, chat, and phone during standard business hours for each respective region.',
+            icon: 'lightbulb',
+            question: 'Proposez-vous des conseils techniques ?',
+            answer:
+                'Bien sûr, notre équipe est disponible pour vous conseiller et vous orienter vers les produits les plus adaptés à vos besoins.',
         },
         {
             id: 'item-5',
-            icon: 'package',
-            question: 'How do I track my order?',
-            answer: 'Une fois votre commande expédiée, vous recevrez un email de confirmation avec un numéro de suivi. Vous pouvez utiliser ce numéro sur notre site web ou sur le site de la transporteur pour suivre votre colis. Vous pouvez également voir l\'état de votre commande et les informations de suivi dans votre tableau de bord de compte sous "Historique des commandes".',
+            icon: 'package-search',
+            question: 'Quels sont vos délais de disponibilité ?',
+            answer:
+                'La majorité de nos produits sont disponibles immédiatement. Pour les références spécifiques, nous vous informons rapidement des délais.',
+        },
+        {
+            id: 'item-6',
+            icon: 'truck',
+            question: 'La livraison est-elle gratuite ?',
+            answer:
+                'Oui, la livraison est offerte dès 200 € d’achat. En dessous, des frais de livraison s’appliquent.',
         },
     ]
 
@@ -53,11 +65,9 @@ export default function FAQsThree() {
                         <div className="sticky top-20">
                             <h2 className="mt-4 text-3xl font-bold">Questions fréquentes</h2>
                             <p className="text-muted-foreground mt-4">
-                                Vous ne trouvez pas ce que vous cherchez ? Contactez notre{' '}
-                                <Link
-                                    href="#"
-                                    className="text-primary font-medium hover:underline">
-                                    équipe de support client
+                                Vous ne trouvez pas ce que vous cherchez ?{' '}
+                                <Link href="/contact" className="text-primary font-medium hover:underline">
+                                    Contactez-nous
                                 </Link>
                             </p>
                         </div>
