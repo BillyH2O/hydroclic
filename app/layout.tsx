@@ -40,7 +40,9 @@ export default function RootLayout({
           className={`${lexend.variable} font-sans antialiased`}
         >
           {children}
-          <WhatsAppFloat phone={process.env.WHATSAPP_NUMBER} />
+          <WhatsAppFloat
+            phone={process.env.WHATSAPP_NUMBER ?? '+33688564485'}
+          />
         </body>
       </html>
     </ClerkProvider>

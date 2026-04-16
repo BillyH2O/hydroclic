@@ -15,9 +15,12 @@ export default function ContactInfo() {
           </div>
           <div>
             <p className="text-sm text-gray-600">Téléphone</p>
-            <p className="text-base font-medium text-gray-900">
-              +33 1 23 45 67 89
-            </p>
+            <a
+              href="tel:+33688564485"
+              className="text-base font-medium text-gray-900 hover:text-primary transition-colors"
+            >
+              06 88 56 44 85
+            </a>
           </div>
         </div>
         <div className="flex items-center gap-3">

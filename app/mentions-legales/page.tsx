@@ -50,7 +50,7 @@ export default function MentionsLegalesPage() {
                 <strong>Email :</strong> shop@hydroclic.fr
               </p>
               <p>
-                <strong>Téléphone :</strong> [Numéro à compléter]
+                <strong>Téléphone :</strong> 06 88 56 44 85
               </p>
             </div>
           </section>
