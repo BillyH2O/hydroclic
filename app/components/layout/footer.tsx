@@ -1,15 +1,22 @@
 'use client'
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { motion, useReducedMotion } from 'motion/react';
 import {
-	FacebookIcon,
-	InstagramIcon,
-	YoutubeIcon,
-} from 'lucide-react';
+	IconBrandTiktok,
+	IconBrandInstagram,
+	IconBrandSnapchat,
+} from '@tabler/icons-react';
 import Button from '../ui/MainButton';
 import { footerData } from './data/footer';
+
+const socialIconMap = {
+	TikTokIcon: IconBrandTiktok,
+	InstagramIcon: IconBrandInstagram,
+	SnapchatIcon: IconBrandSnapchat,
+} as const;
 
 
 type StickyFooterProps = React.ComponentProps<'footer'>;
@@ -57,24 +64,25 @@ export function Footer({ className, ...props }: StickyFooterProps) {
 								</div>
 								<div className="flex gap-2">
 									{footerData.socialLinks.map((link) => {
-										const IconComponent = {
-											FacebookIcon,
-											InstagramIcon,
-											YoutubeIcon,
-
-										}[link.icon] || FacebookIcon;
-										
+										const IconComponent =
+											socialIconMap[link.icon as keyof typeof socialIconMap];
+										if (!IconComponent) return null;
 										return (
-											<Button 
+											<Link
 												key={link.title}
-												size="sm" 
-												variant="neutral" 
-												blur={true} 
 												href={link.href}
-												className="w-10 h-10 flex items-center justify-center p-0"
+												target="_blank"
+												rel="noopener noreferrer"
+												aria-label={link.title}
+												className={cn(
+													'inline-flex size-10 items-center justify-center rounded-full p-0',
+													'bg-white/20 backdrop-blur-md text-white border border-white/30',
+													'hover:bg-white/30 hover:border-white/50 transition-all duration-300',
+													'hover:scale-100 hover:shadow-lg focus:outline-none',
+												)}
 											>
-												<IconComponent className="size-4" />
-											</Button>
+												<IconComponent className="size-4" aria-hidden />
+											</Link>
 										);
 									})}
 								</div>

@@ -5,9 +5,21 @@ export const footerData = {
     phone: "+33 6 88 56 44 85",
   },
   socialLinks: [
-    { title: 'Facebook', href: '#', icon: 'FacebookIcon' },
-    { title: 'Instagram', href: '#', icon: 'InstagramIcon' },
-    { title: 'LinkedIn', href: '#', icon: 'YoutubeIcon' },
+    {
+      title: 'TikTok',
+      href: 'https://www.tiktok.com/@hydro.clic',
+      icon: 'TikTokIcon',
+    },
+    {
+      title: 'Instagram',
+      href: 'https://www.instagram.com/hydroclic/',
+      icon: 'InstagramIcon',
+    },
+    {
+      title: 'Snapchat',
+      href: 'https://www.snapchat.com/add/hydroclic',
+      icon: 'SnapchatIcon',
+    },
   ],
   linkGroups: [
     {
