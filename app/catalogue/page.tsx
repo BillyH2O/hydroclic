@@ -1,9 +1,23 @@
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 import { CatalogueService } from '@/lib/services/catalogue'
 import { CatalogueFilters, PaginationParams, SortOption, OfferFilter, ProductTypeFilter } from '@/lib/types/catalogue'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import CatalogueClient from './components/CatalogueClient'
+
+export const metadata: Metadata = {
+  title: 'Catalogue',
+  description:
+    'Parcourez notre catalogue complet : plomberie, électricité, climatisation, chauffage, outillage et sanitaire — adaptés aux professionnels comme aux particuliers.',
+  alternates: { canonical: '/catalogue' },
+  openGraph: {
+    title: 'Catalogue produits | Hydroclic',
+    description:
+      'Plomberie, électricité, climatisation, chauffage, outillage et sanitaire pour professionnels et particuliers.',
+    url: '/catalogue',
+  },
+}
 
 interface CataloguePageProps {
   searchParams: Promise<{

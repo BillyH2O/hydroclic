@@ -1,8 +1,22 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { LoginBackground } from '@/components/features/login/Background'
 import ContactInfo from '../components/features/contact/ContactInfo'
 import ContactForm from '../components/features/contact/ContactForm'
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description:
+    'Contactez l'équipe Hydroclic pour toute question sur nos produits ou pour préparer votre commande. Dépôt au 86 boulevard Félix Faure, 93300 Aubervilliers.',
+  alternates: { canonical: '/contact' },
+  openGraph: {
+    title: 'Contactez Hydroclic',
+    description:
+      'Notre équipe est disponible pour vous conseiller. Dépôt à Aubervilliers (93300).',
+    url: '/contact',
+  },
+}
 
 /**
  * Page de contact
