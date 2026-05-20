@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
 import { frFR } from "@clerk/localizations";
 import "./globals.css";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
-
-const lexend = Lexend({
-  variable: "--font-lexend",
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
 
 const BASE_URL =
   (process.env.NEXT_PUBLIC_APP_URL ?? 'https://hydroclic.fr').replace(/\/$/, '')
@@ -81,9 +74,19 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/onboarding/check"
     >
       <html lang="fr">
-        <body
-          className={`${lexend.variable} font-sans antialiased`}
-        >
+        <head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+          />
+        </head>
+        <body className="font-sans antialiased">
           {children}
           <WhatsAppFloat
             phone={process.env.WHATSAPP_NUMBER ?? '+33688564485'}

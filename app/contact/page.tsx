@@ -8,7 +8,7 @@ import ContactForm from '../components/features/contact/ContactForm'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Contactez l'équipe Hydroclic pour toute question sur nos produits ou pour préparer votre commande. Dépôt au 86 boulevard Félix Faure, 93300 Aubervilliers.',
+    "Contactez l'équipe Hydroclic pour toute question sur nos produits ou pour préparer votre commande. Dépôt au 86 boulevard Félix Faure, 93300 Aubervilliers.",
   alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contactez Hydroclic',

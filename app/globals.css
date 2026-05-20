@@ -4,6 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-lexend: 'Lexend', ui-sans-serif, system-ui, sans-serif;
   /* Bleu marque Hydroclic : base pour text-primary, bg-primary, accent-primary, etc. */
   --primary: #1986e3;
   --radius: 0.625rem;
