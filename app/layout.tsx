@@ -5,7 +5,7 @@ import "./globals.css";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 
 const BASE_URL =
-  (process.env.NEXT_PUBLIC_APP_URL ?? 'https://hydroclic.fr').replace(/\/$/, '')
+  (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.hydroclic.fr').replace(/\/$/, '')
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

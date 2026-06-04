@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 const BASE_URL =
-  (process.env.NEXT_PUBLIC_APP_URL ?? 'https://hydroclic.fr').replace(/\/$/, '')
+  (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.hydroclic.fr').replace(/\/$/, '')
 
 export default function robots(): MetadataRoute.Robots {
   return {
