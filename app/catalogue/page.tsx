@@ -66,10 +66,10 @@ export default async function CataloguePage({ searchParams }: CataloguePageProps
         {/* Header */}
         <div className="flex flex-col gap-4 mb-16">
           <h1 className="text-4xl text-gray-900">
-            Catalogue
+            Catalogue Hydroclic — plomberie, chauffage, électricité &amp; sanitaire
           </h1>
           <p className="text-gray-600">
-            Découvrez notre sélection de produits professionnels
+            Découvrez notre sélection de produits professionnels et particuliers.
           </p>
         </div>
 

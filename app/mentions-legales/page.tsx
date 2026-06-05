@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+
+export const metadata: Metadata = {
+  title: 'Mentions légales',
+  description:
+    'Mentions légales du site Hydroclic : informations sur l’éditeur, l’hébergeur et les conditions d’utilisation.',
+  alternates: { canonical: '/mentions-legales' },
+  robots: { index: true, follow: true },
+}
 
 /**
  * Page des mentions légales

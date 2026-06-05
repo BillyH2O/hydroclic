@@ -14,6 +14,11 @@ import AboutSection from "./components/features/landing/about/AboutSection";
 /*import { BlogSection } from "./components/features/landing/blog/BlogSection";*/
 import { TestimonialSection } from "./components/features/landing/avis/TestimonalSection";
 import { Footer } from "./components/layout/footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
 

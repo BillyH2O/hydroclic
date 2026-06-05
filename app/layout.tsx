@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from '@clerk/nextjs';
 import { frFR } from "@clerk/localizations";
+import { Lexend } from 'next/font/google';
 import "./globals.css";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+
+const lexend = Lexend({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-lexend',
+  display: 'swap',
+});
 
 const BASE_URL =
   (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.hydroclic.fr').replace(/\/$/, '')
@@ -49,9 +57,6 @@ export const metadata: Metadata = {
     description:
       'Hydroclic, votre distributeur de matériaux à Aubervilliers (93).',
   },
-  alternates: {
-    canonical: BASE_URL,
-  },
 };
 
 export default function RootLayout({
@@ -73,19 +78,7 @@ export default function RootLayout({
       signInFallbackRedirectUrl="/onboarding/check"
       signUpFallbackRedirectUrl="/onboarding/check"
     >
-      <html lang="fr">
-        <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
-        </head>
+      <html lang="fr" className={lexend.variable}>
         <body className="font-sans antialiased">
           {children}
           <WhatsAppFloat

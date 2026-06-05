@@ -68,13 +68,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     }
   }
 
+  const canonicalSlug = product.slug || product.id
   return {
     title: `${product.name} - Hydroclic`,
     description: product.description || `Découvrez ${product.name} sur Hydroclic`,
+    alternates: {
+      canonical: `/produit/${canonicalSlug}`,
+    },
     openGraph: {
       title: product.name,
       description: product.description,
       images: [getProductImage(product.image)],
+      url: `/produit/${canonicalSlug}`,
     },
   }
 }

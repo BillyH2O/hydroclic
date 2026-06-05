@@ -115,6 +115,44 @@ export default function CatalogueClient({
     updateURL(filters, page)
   }
 
+  // Construire l'URL d'une page donnée (liens crawlables pour le SEO)
+  const buildPageHref = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (filters.offer !== OfferFilter.ALL) {
+      params.set('offer', filters.offer)
+    } else {
+      params.delete('offer')
+    }
+
+    if (filters.productType !== 'all') {
+      params.set('productType', filters.productType)
+    } else {
+      params.delete('productType')
+    }
+
+    if (filters.sort !== 'default') {
+      params.set('sort', filters.sort)
+    } else {
+      params.delete('sort')
+    }
+
+    if (filters.search && filters.search.trim() !== '') {
+      params.set('search', filters.search)
+    } else {
+      params.delete('search')
+    }
+
+    if (page > 1) {
+      params.set('page', page.toString())
+    } else {
+      params.delete('page')
+    }
+
+    const qs = params.toString()
+    return qs ? `/catalogue?${qs}` : '/catalogue'
+  }
+
   return (
     <>
       <div className="flex flex-col md:flex-row sm:gap-8 gap-0">
@@ -188,6 +226,7 @@ export default function CatalogueClient({
                 currentPage={result.page}
                 totalPages={result.totalPages}
                 onPageChange={handlePageChange}
+                getPageHref={buildPageHref}
               />
             </>
           )}

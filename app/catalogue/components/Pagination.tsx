@@ -1,5 +1,7 @@
 'use client'
 
+import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -7,12 +9,14 @@ interface PaginationProps {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
+  getPageHref?: (page: number) => string
 }
 
 export default function Pagination({
   currentPage,
   totalPages,
   onPageChange,
+  getPageHref,
 }: PaginationProps) {
   if (totalPages <= 1) return null
 
@@ -79,19 +83,50 @@ export default function Pagination({
     return pages
   }
 
+  // Rend un contrôle de pagination en tant que vrai lien <a> crawlable (SEO)
+  // quand getPageHref est fourni, sinon en bouton cliquable.
+  const renderControl = (
+    page: number,
+    children: ReactNode,
+    opts: { active?: boolean; disabled?: boolean; className?: string },
+  ) => {
+    const variant = opts.active ? 'default' : 'outline'
+    if (getPageHref && !opts.disabled) {
+      return (
+        <Button asChild variant={variant} size="sm" className={opts.className}>
+          <Link
+            href={getPageHref(page)}
+            aria-current={opts.active ? 'page' : undefined}
+          >
+            {children}
+          </Link>
+        </Button>
+      )
+    }
+    return (
+      <Button
+        variant={variant}
+        size="sm"
+        disabled={opts.disabled}
+        onClick={() => onPageChange(page)}
+        className={opts.className}
+      >
+        {children}
+      </Button>
+    )
+  }
+
   return (
     <div className="flex items-center justify-center gap-1 sm:gap-2 mt-8 flex-wrap">
       {/* Bouton précédent */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="flex items-center gap-1 px-2 sm:px-3"
-      >
-        <ChevronLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Précédent</span>
-      </Button>
+      {renderControl(
+        currentPage - 1,
+        <>
+          <ChevronLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Précédent</span>
+        </>,
+        { disabled: currentPage === 1, className: 'flex items-center gap-1 px-2 sm:px-3' },
+      )}
 
       {/* Numéros de page - Mobile */}
       <div className="flex items-center gap-0.5 sm:hidden">
@@ -106,15 +141,12 @@ export default function Pagination({
 
           const pageNumber = page as number
           return (
-            <Button
-              key={pageNumber}
-              variant={currentPage === pageNumber ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => onPageChange(pageNumber)}
-              className="min-w-[32px] h-8 text-xs px-2"
-            >
-              {pageNumber}
-            </Button>
+            <span key={pageNumber}>
+              {renderControl(pageNumber, pageNumber, {
+                active: currentPage === pageNumber,
+                className: 'min-w-[32px] h-8 text-xs px-2',
+              })}
+            </span>
           )
         })}
       </div>
@@ -132,30 +164,25 @@ export default function Pagination({
 
           const pageNumber = page as number
           return (
-            <Button
-              key={pageNumber}
-              variant={currentPage === pageNumber ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => onPageChange(pageNumber)}
-              className="min-w-[40px]"
-            >
-              {pageNumber}
-            </Button>
+            <span key={pageNumber}>
+              {renderControl(pageNumber, pageNumber, {
+                active: currentPage === pageNumber,
+                className: 'min-w-[40px]',
+              })}
+            </span>
           )
         })}
       </div>
 
       {/* Bouton suivant */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="flex items-center gap-1 px-2 sm:px-3"
-      >
-        <span className="hidden sm:inline">Suivant</span>
-        <ChevronRight className="h-4 w-4" />
-      </Button>
+      {renderControl(
+        currentPage + 1,
+        <>
+          <span className="hidden sm:inline">Suivant</span>
+          <ChevronRight className="h-4 w-4" />
+        </>,
+        { disabled: currentPage === totalPages, className: 'flex items-center gap-1 px-2 sm:px-3' },
+      )}
     </div>
   )
 }

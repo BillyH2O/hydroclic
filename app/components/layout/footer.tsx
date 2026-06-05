@@ -9,7 +9,6 @@ import {
 	IconBrandInstagram,
 	IconBrandSnapchat,
 } from '@tabler/icons-react';
-import Button from '../ui/MainButton';
 import { footerData } from './data/footer';
 
 const socialIconMap = {

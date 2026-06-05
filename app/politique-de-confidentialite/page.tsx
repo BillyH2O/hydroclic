@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+
+export const metadata: Metadata = {
+  title: 'Politique de confidentialité',
+  description:
+    'Politique de confidentialité d’Hydroclic : quelles données personnelles sont collectées, comment elles sont utilisées et protégées.',
+  alternates: { canonical: '/politique-de-confidentialite' },
+  robots: { index: true, follow: true },
+}
 
 /**
  * Page de politique de confidentialité

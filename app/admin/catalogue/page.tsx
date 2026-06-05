@@ -3,6 +3,8 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import AdminCatalogueClient from './AdminCatalogueClient'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * Page de gestion du catalogue
  * Accessible via /admin/catalogue
