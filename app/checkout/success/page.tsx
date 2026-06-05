@@ -1,5 +1,10 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Navbar } from '@/components/layout/navbar'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 import { Footer } from '@/components/layout/footer'
 import { LoginBackground } from '@/components/features/login/Background'
 import { CheckCircle } from 'lucide-react'

@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 import { Footer } from '@/components/layout/footer'
 import { XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'

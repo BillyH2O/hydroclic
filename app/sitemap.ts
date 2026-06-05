@@ -4,19 +4,11 @@ import { ProductService } from '@/lib/services/products'
 const BASE_URL =
   (process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.hydroclic.fr').replace(/\/$/, '')
 
-const PRODUCT_TYPES = [
-  'hydrodistribution',
-  'chauffage-climatisation',
-  'traitement-eau',
-  'sanitaire',
-  'outillage',
-  'consommable',
-  'electricite',
-] as const
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
+  // Pages statiques indexables uniquement — pas de query params (Google voit
+  // les URLs filtrées comme du contenu dupliqué ou génère des redirect errors).
   const staticEntries: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}/`,
@@ -50,13 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  const categoryEntries: MetadataRoute.Sitemap = PRODUCT_TYPES.map((type) => ({
-    url: `${BASE_URL}/catalogue?productType=${type}`,
-    lastModified: now,
-    changeFrequency: 'weekly',
-    priority: 0.6,
-  }))
-
   let productEntries: MetadataRoute.Sitemap = []
   try {
     const products = await ProductService.getAllProducts()
@@ -75,5 +60,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] Impossible de charger les produits:', error)
   }
 
-  return [...staticEntries, ...categoryEntries, ...productEntries]
+  return [...staticEntries, ...productEntries]
 }

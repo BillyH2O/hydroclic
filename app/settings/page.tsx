@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { auth, currentUser } from '@clerk/nextjs/server'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 import { redirect } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
