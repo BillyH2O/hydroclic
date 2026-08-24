@@ -1,275 +1,232 @@
 import type { Metadata } from 'next'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
+import { COMPANY, LEGAL_PATHS } from '@/lib/legal/company'
+import {
+  LegalLink,
+  LegalPageShell,
+  LegalSection,
+  LegalUpdated,
+  MailLink,
+} from '@/components/legal/LegalPageShell'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
   description:
-    'Politique de confidentialité d’Hydroclic : quelles données personnelles sont collectées, comment elles sont utilisées et protégées.',
-  alternates: { canonical: '/politique-de-confidentialite' },
+    'Politique de confidentialité d’Hydroclic : données collectées, finalités, bases légales, durées, destinataires et vos droits RGPD.',
+  alternates: { canonical: LEGAL_PATHS.privacy },
   robots: { index: true, follow: true },
 }
 
-/**
- * Page de politique de confidentialité
- */
 export default function PolitiqueConfidentialitePage() {
   return (
-    <div className="w-full min-h-screen bg-zinc-50 font-sans">
-      <Navbar solid />
-      
-      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Politique de confidentialité
-          </h1>
-          <p className="text-lg text-gray-600">
-            Protection de vos données personnelles
-          </p>
+    <LegalPageShell
+      title="Politique de confidentialité"
+      subtitle="Protection de vos données personnelles"
+    >
+      <LegalSection title="1. Responsable du traitement">
+        <p>
+          Le responsable du traitement des données personnelles collectées sur le site{' '}
+          {COMPANY.siteUrl.replace('https://', '')} est :
+        </p>
+        <ul className="space-y-1">
+          <li>
+            <strong>{COMPANY.legalName}</strong>, {COMPANY.legalForm}, au capital de{' '}
+            {COMPANY.shareCapital}
+          </li>
+          <li>
+            {COMPANY.siret} — {COMPANY.rcs}
+          </li>
+          <li>{COMPANY.address.full}</li>
+          <li>
+            Email : <MailLink />
+          </li>
+        </ul>
+        <p>
+          Aucun délégué à la protection des données (DPO) n’est désigné. Pour toute question
+          relative à vos données, contactez-nous à <MailLink />.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="2. Données collectées">
+        <p>Selon votre utilisation du site, nous pouvons traiter :</p>
+        <ul className="list-disc list-inside space-y-2 ml-1">
+          <li>
+            <strong>Identification et contact :</strong> nom, prénom, adresse e-mail, téléphone,
+            adresse de livraison et de facturation
+          </li>
+          <li>
+            <strong>Compte :</strong> identifiants de connexion gérés par Clerk (voir § 6)
+          </li>
+          <li>
+            <strong>Compte professionnel :</strong> raison sociale, SIRET, adresse professionnelle
+          </li>
+          <li>
+            <strong>Commande :</strong> contenu du panier, historique de commandes, mode de
+            livraison, statut de paiement (les données de carte sont collectées par Stripe, nous ne
+            les stockons pas)
+          </li>
+          <li>
+            <strong>Messages :</strong> contenu des formulaires de contact et échanges WhatsApp /
+            e-mail
+          </li>
+          <li>
+            <strong>Techniques :</strong> adresse IP, logs serveur, type de navigateur, cookies
+            strictement nécessaires
+          </li>
+        </ul>
+        <p>Nous ne collectons pas de données sensibles au sens de l’article 9 du RGPD.</p>
+      </LegalSection>
+
+      <LegalSection title="3. Finalités et bases légales">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border border-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="text-left p-3 border-b">Finalité</th>
+                <th className="text-left p-3 border-b">Base légale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="p-3">Création et gestion du compte</td>
+                <td className="p-3">Exécution du contrat (art. 6.1.b)</td>
+              </tr>
+              <tr className="border-b bg-gray-50/50">
+                <td className="p-3">Traitement des commandes, paiement, livraison, facturation</td>
+                <td className="p-3">Exécution du contrat ; obligation légale (comptabilité)</td>
+              </tr>
+              <tr className="border-b">
+                <td className="p-3">Service client, SAV, messages de contact</td>
+                <td className="p-3">Exécution du contrat ; intérêt légitime</td>
+              </tr>
+              <tr className="border-b bg-gray-50/50">
+                <td className="p-3">Prévention de la fraude et sécurité du site</td>
+                <td className="p-3">Intérêt légitime (art. 6.1.f)</td>
+              </tr>
+              <tr>
+                <td className="p-3">Communications commerciales (si vous y avez consenti)</td>
+                <td className="p-3">Consentement (art. 6.1.a), révocable à tout moment</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </LegalSection>
 
-        {/* Contenu */}
-        <div className="bg-white rounded-lg shadow-md p-6 md:p-8 space-y-8">
-          {/* Introduction */}
-          <section>
-            <p className="text-gray-700 mb-4">
-              Hydroclic (ci-après &quot; nous &quot;, &quot; notre &quot; ou &quot; le site &quot;) s&apos;engage à protéger et respecter votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos informations personnelles lorsque vous utilisez notre site web.
-            </p>
-            <p className="text-gray-700">
-              En utilisant notre site, vous acceptez les pratiques décrites dans cette politique de confidentialité. Si vous n&apos;acceptez pas cette politique, veuillez ne pas utiliser notre site.
-            </p>
-          </section>
+      <LegalSection title="4. Durées de conservation">
+        <ul className="list-disc list-inside space-y-2 ml-1">
+          <li>
+            <strong>Compte :</strong> pendant la durée du compte, puis 3 ans après la dernière
+            activité ou la suppression
+          </li>
+          <li>
+            <strong>Commandes et factures :</strong> 10 ans (obligation comptable)
+          </li>
+          <li>
+            <strong>Demandes de contact :</strong> 3 ans après le dernier échange
+          </li>
+          <li>
+            <strong>Logs techniques :</strong> 12 mois maximum
+          </li>
+          <li>
+            <strong>Preuve du consentement cookies :</strong> 6 mois (recommandation CNIL), puis
+            renouvellement
+          </li>
+        </ul>
+      </LegalSection>
 
-          {/* Responsable du traitement */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              1. Responsable du traitement des données
-            </h2>
-            <div className="text-gray-700 space-y-2">
-              <p>
-                <strong>Raison sociale :</strong> Hydroclic
-              </p>
-              <p>
-                <strong>Adresse :</strong> [Adresse à compléter]
-              </p>
-              <p>
-                <strong>Email :</strong>{' '}
-                <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
-                shop@hydroclic.fr
-                </a>
-              </p>
-            </div>
-          </section>
+      <LegalSection title="5. Destinataires">
+        <p>Vos données sont accessibles uniquement aux personnes habilitées d’Hydroclic et à :</p>
+        <ul className="list-disc list-inside space-y-2 ml-1">
+          <li>
+            <strong>Vercel Inc.</strong> — hébergement du site
+          </li>
+          <li>
+            <strong>Clerk, Inc.</strong> — authentification et gestion des comptes
+          </li>
+          <li>
+            <strong>Stripe</strong> (Stripe Payments Europe Ltd / Stripe, Inc.) — paiement
+            sécurisé. Hydroclic ne stocke pas les numéros de carte
+          </li>
+          <li>
+            <strong>Prestataires e-mail / WhatsApp</strong> — envoi des messages que vous
+            initiez
+          </li>
+          <li>Transporteurs, lorsque vous choisissez la livraison à domicile</li>
+          <li>Autorités, uniquement si la loi l’exige</li>
+        </ul>
+        <p>Nous ne vendons jamais vos données.</p>
+      </LegalSection>
 
-          {/* Données collectées */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              2. Données personnelles collectées
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Nous collectons les données personnelles suivantes :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li>
-                <strong>Données d&apos;identification :</strong> nom, prénom, adresse email, numéro de téléphone
-              </li>
-              <li>
-                <strong>Données de connexion :</strong> adresse IP, type de navigateur, système d&apos;exploitation
-              </li>
-              <li>
-                <strong>Données de navigation :</strong> pages visitées, durée de visite, liens cliqués
-              </li>
-              <li>
-                <strong>Données de commande :</strong> historique des commandes, adresse de livraison, informations de paiement (traitées par notre prestataire de paiement sécurisé)
-              </li>
-              <li>
-                <strong>Données professionnelles :</strong> pour les comptes professionnels, numéro SIRET, raison sociale, adresse professionnelle
-              </li>
-            </ul>
-          </section>
+      <LegalSection title="6. Transferts hors Union européenne">
+        <p>
+          Clerk, Vercel et Stripe peuvent traiter des données depuis les États-Unis. Ces transferts
+          s’appuient sur les clauses contractuelles types de la Commission européenne et, le cas
+          échéant, sur le cadre Data Privacy Framework.
+        </p>
+        <p>
+          WhatsApp (Meta Platforms Ireland Ltd) peut également transférer des données hors UE
+          lorsque vous utilisez le bouton WhatsApp, y compris si une commande est ensuite conclue
+          dans cette conversation. Cette communication est initiée par vous.
+        </p>
+      </LegalSection>
 
-          {/* Finalités */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              3. Finalités du traitement
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Vos données personnelles sont collectées et traitées pour les finalités suivantes :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li>Gestion de votre compte utilisateur</li>
-              <li>Traitement et suivi de vos commandes</li>
-              <li>Gestion de la relation client et du service après-vente</li>
-              <li>Envoi de communications commerciales (avec votre consentement)</li>
-              <li>Amélioration de nos services et de l&apos;expérience utilisateur</li>
-              <li>Respect de nos obligations légales et réglementaires</li>
-              <li>Prévention de la fraude et sécurisation du site</li>
-              <li>Statistiques et analyses de fréquentation</li>
-            </ul>
-          </section>
+      <LegalSection title="7. Vos droits">
+        <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+        <ul className="list-disc list-inside space-y-2 ml-1">
+          <li>accès, rectification, effacement</li>
+          <li>limitation et opposition au traitement</li>
+          <li>portabilité</li>
+          <li>retrait du consentement, lorsque le traitement y est fondé</li>
+          <li>directives relatives au sort de vos données après votre décès</li>
+        </ul>
+        <p>
+          Pour les exercer, écrivez à <MailLink /> en précisant votre demande. Nous pourrons
+          demander un justificatif d’identité en cas de doute. Réponse sous un mois.
+        </p>
+        <p>
+          Vous pouvez introduire une réclamation auprès de la CNIL : 3 Place de Fontenoy, TSA
+          80715, 75334 Paris Cedex 07 —{' '}
+          <a
+            href="https://www.cnil.fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2"
+          >
+            www.cnil.fr
+          </a>
+          .
+        </p>
+      </LegalSection>
 
-          {/* Base légale */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              4. Base légale du traitement
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Le traitement de vos données personnelles est fondé sur :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li><strong>Votre consentement</strong> pour les communications marketing</li>
-              <li><strong>L&apos;exécution d&apos;un contrat</strong> pour le traitement de vos commandes</li>
-              <li><strong>L&apos;intérêt légitime</strong> pour l&apos;amélioration de nos services et la sécurité</li>
-              <li><strong>Le respect d&apos;obligations légales</strong> pour la facturation et la comptabilité</li>
-            </ul>
-          </section>
+      <LegalSection title="8. Cookies">
+        <p>
+          Le détail des cookies, leur durée et vos choix figurent dans la{' '}
+          <LegalLink href={LEGAL_PATHS.cookies}>politique cookies</LegalLink>. Les cookies non
+          nécessaires ne sont déposés qu’après un consentement explicite (accepter / refuser).
+        </p>
+      </LegalSection>
 
-          {/* Conservation */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              5. Durée de conservation
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Vos données personnelles sont conservées pour les durées suivantes :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li><strong>Données de compte :</strong> pendant la durée de vie de votre compte et 3 ans après sa fermeture</li>
-              <li><strong>Données de commande :</strong> 10 ans (obligation légale de conservation des factures)</li>
-              <li><strong>Données de navigation :</strong> 13 mois maximum</li>
-              <li><strong>Données de contact :</strong> 3 ans après le dernier contact</li>
-            </ul>
-          </section>
+      <LegalSection title="9. Sécurité">
+        <p>
+          Nous mettons en œuvre des mesures techniques et organisationnelles adaptées (HTTPS,
+          accès restreints, prestataires de paiement certifiés). Aucune transmission sur Internet
+          n’est toutefois infaillible.
+        </p>
+      </LegalSection>
 
-          {/* Destinataires */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              6. Destinataires des données
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Vos données personnelles peuvent être transmises aux destinataires suivants :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li>Personnel autorisé d&apos;Hydroclic</li>
-              <li>Prestataires techniques (hébergement, maintenance)</li>
-              <li>Prestataires de paiement sécurisé (Stripe)</li>
-              <li>Services de livraison</li>
-              <li>Autorités compétentes en cas d&apos;obligation légale</li>
-            </ul>
-            <p className="text-gray-700 mt-3">
-              Nous ne vendons jamais vos données personnelles à des tiers à des fins commerciales.
-            </p>
-          </section>
+      <LegalSection title="10. Modifications">
+        <p>
+          Cette politique peut être mise à jour. La date de dernière modification figure en bas de
+          page. En cas de changement substantiel, une information sera affichée sur le site.
+        </p>
+      </LegalSection>
 
-          {/* Transferts */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              7. Transferts de données hors UE
-            </h2>
-            <p className="text-gray-700">
-              Certains de nos prestataires peuvent être situés hors de l&apos;Union Européenne. Dans ce cas, nous nous assurons que des garanties appropriées sont mises en place pour protéger vos données, conformément au RGPD.
-            </p>
-          </section>
+      <LegalSection title="11. Contact">
+        <p>
+          {COMPANY.legalName} — {COMPANY.address.full} — <MailLink />
+        </p>
+      </LegalSection>
 
-          {/* Vos droits */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              8. Vos droits
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li><strong>Droit d&apos;accès :</strong> vous pouvez obtenir une copie de vos données personnelles</li>
-              <li><strong>Droit de rectification :</strong> vous pouvez corriger vos données inexactes</li>
-              <li><strong>Droit à l&apos;effacement :</strong> vous pouvez demander la suppression de vos données</li>
-              <li><strong>Droit à la limitation :</strong> vous pouvez demander la limitation du traitement</li>
-              <li><strong>Droit à la portabilité :</strong> vous pouvez récupérer vos données dans un format structuré</li>
-              <li><strong>Droit d&apos;opposition :</strong> vous pouvez vous opposer au traitement de vos données</li>
-              <li><strong>Droit de retirer votre consentement :</strong> à tout moment pour les communications marketing</li>
-            </ul>
-            <p className="text-gray-700 mt-4">
-              Pour exercer ces droits, contactez-nous à l&apos;adresse :{' '}
-              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
-                shop@hydroclic.fr
-              </a>
-            </p>
-            <p className="text-gray-700 mt-2">
-              Vous avez également le droit d&apos;introduire une réclamation auprès de la CNIL (Commission Nationale de l&apos;Informatique et des Libertés) si vous estimez que le traitement de vos données personnelles constitue une violation du RGPD.
-            </p>
-          </section>
-
-          {/* Cookies */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              9. Cookies et technologies similaires
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Notre site utilise des cookies pour :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li>Assurer le bon fonctionnement du site</li>
-              <li>Mémoriser vos préférences</li>
-              <li>Analyser le trafic et améliorer nos services</li>
-            </ul>
-            <p className="text-gray-700 mt-3">
-              Vous pouvez configurer votre navigateur pour refuser les cookies, mais cela peut affecter certaines fonctionnalités du site.
-            </p>
-          </section>
-
-          {/* Sécurité */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              10. Sécurité des données
-            </h2>
-            <p className="text-gray-700 mb-3">
-              Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données personnelles contre :
-            </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-              <li>L&apos;accès non autorisé</li>
-              <li>La perte ou la destruction accidentelle</li>
-              <li>La divulgation non autorisée</li>
-              <li>La modification non autorisée</li>
-            </ul>
-            <p className="text-gray-700 mt-3">
-              Cependant, aucune méthode de transmission sur Internet ou de stockage électronique n&apos;est totalement sécurisée. Bien que nous nous efforcions d&apos;utiliser des moyens commercialement acceptables pour protéger vos données, nous ne pouvons garantir leur sécurité absolue.
-            </p>
-          </section>
-
-          {/* Modifications */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              11. Modifications de la politique
-            </h2>
-            <p className="text-gray-700">
-              Nous nous réservons le droit de modifier cette politique de confidentialité à tout moment. Les modifications entreront en vigueur dès leur publication sur cette page. Nous vous encourageons à consulter régulièrement cette page pour rester informé de la manière dont nous protégeons vos données.
-            </p>
-          </section>
-
-          {/* Contact */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              12. Contact
-            </h2>
-            <p className="text-gray-700">
-              Pour toute question concernant cette politique de confidentialité ou le traitement de vos données personnelles, vous pouvez nous contacter à l&apos;adresse :{' '}
-              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
-                shop@hydroclic.fr
-              </a>
-            </p>
-          </section>
-
-          {/* Date de mise à jour */}
-          <div className="pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          </div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      <LegalUpdated />
+    </LegalPageShell>
   )
 }
-

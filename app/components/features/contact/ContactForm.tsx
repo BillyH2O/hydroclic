@@ -209,6 +209,15 @@ export default function ContactForm() {
         )}
       </div>
 
+      <p className="text-xs text-gray-500 leading-relaxed">
+        Les informations saisies sont utilisées uniquement pour répondre à votre demande.
+        Pour en savoir plus, consultez notre{' '}
+        <a href="/politique-de-confidentialite" className="text-primary underline">
+          politique de confidentialité
+        </a>
+        .
+      </p>
+
       {/* Bouton submit */}
       <Button
         type="submit"

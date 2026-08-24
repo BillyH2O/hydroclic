@@ -54,6 +54,8 @@ export const footerData = {
       links: [
         { title: 'Mentions légales', href: '/mentions-legales' },
         { title: 'Politique de confidentialité', href: '/politique-de-confidentialite' },
+        { title: 'CGV', href: '/conditions-generales-de-vente' },
+        { title: 'Cookies', href: '/politique-cookies' },
       ],
     },
   ],

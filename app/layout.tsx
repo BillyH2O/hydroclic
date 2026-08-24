@@ -4,6 +4,7 @@ import { frFR } from "@clerk/localizations";
 import { Lexend } from 'next/font/google';
 import "./globals.css";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { CookieBanner } from "@/components/legal/CookieBanner";
 
 const lexend = Lexend({
   subsets: ['latin'],
@@ -81,6 +82,7 @@ export default function RootLayout({
       <html lang="fr" className={lexend.variable}>
         <body className="font-sans antialiased">
           {children}
+          <CookieBanner />
           <WhatsAppFloat
             phone={process.env.WHATSAPP_NUMBER ?? '+33688564485'}
           />

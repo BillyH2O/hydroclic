@@ -1,208 +1,174 @@
 import type { Metadata } from 'next'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
+import { COMPANY, LEGAL_PATHS } from '@/lib/legal/company'
+import {
+  LegalLink,
+  LegalPageShell,
+  LegalSection,
+  LegalUpdated,
+  MailLink,
+} from '@/components/legal/LegalPageShell'
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
   description:
-    'Mentions légales du site Hydroclic : informations sur l’éditeur, l’hébergeur et les conditions d’utilisation.',
-  alternates: { canonical: '/mentions-legales' },
+    'Mentions légales du site Hydroclic : éditeur, hébergeur, propriété intellectuelle et conditions d’utilisation.',
+  alternates: { canonical: LEGAL_PATHS.mentions },
   robots: { index: true, follow: true },
 }
 
-/**
- * Page des mentions légales
- */
 export default function MentionsLegalesPage() {
   return (
-    <div className="w-full min-h-screen bg-zinc-50 font-sans">
-      <Navbar solid />
-      
-      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Mentions légales
-          </h1>
-          <p className="text-lg text-gray-600">
-            Informations légales concernant Hydroclic
-          </p>
-        </div>
+    <LegalPageShell title="Mentions légales" subtitle="Informations légales concernant Hydroclic">
+      <LegalSection title="1. Éditeur du site">
+        <p>Le site {COMPANY.siteUrl.replace('https://', '')} est édité par :</p>
+        <ul className="space-y-1">
+          <li>
+            <strong>Raison sociale :</strong> {COMPANY.legalName}
+          </li>
+          <li>
+            <strong>Forme juridique :</strong> {COMPANY.legalForm}
+          </li>
+          <li>
+            <strong>Capital social :</strong> {COMPANY.shareCapital}
+          </li>
+          <li>
+            <strong>Siège social :</strong> {COMPANY.address.full}
+          </li>
+          <li>
+            <strong>SIREN :</strong> {COMPANY.siren}
+          </li>
+          <li>
+            <strong>SIRET :</strong> {COMPANY.siret}
+          </li>
+          <li>
+            <strong>Immatriculation :</strong> {COMPANY.rcs}
+          </li>
+          <li>
+            <strong>N° TVA intracommunautaire :</strong> {COMPANY.tva}
+          </li>
+          <li>
+            <strong>Code NAF / APE :</strong> {COMPANY.naf}
+          </li>
+          <li>
+            <strong>Email :</strong> <MailLink />
+          </li>
+          <li>
+            <strong>Téléphone :</strong>{' '}
+            <a href={`tel:${COMPANY.phoneTel}`} className="text-primary underline underline-offset-2">
+              {COMPANY.phoneDisplay}
+            </a>
+          </li>
+        </ul>
+      </LegalSection>
 
-        {/* Contenu */}
-        <div className="bg-white rounded-lg shadow-md p-6 md:p-8 space-y-8">
-          {/* Éditeur du site */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              1. Éditeur du site
-            </h2>
-            <div className="text-gray-700 space-y-2">
-              <p>
-                <strong>Raison sociale :</strong> Hydroclic
-              </p>
-              <p>
-                <strong>Forme juridique :</strong> [À compléter]
-              </p>
-              <p>
-                <strong>Siège social :</strong> [Adresse à compléter]
-              </p>
-              <p>
-                <strong>SIRET :</strong> [Numéro à compléter]
-              </p>
-              <p>
-                <strong>RCS :</strong> [Ville et numéro à compléter]
-              </p>
-              <p>
-                <strong>TVA Intracommunautaire :</strong> [Numéro à compléter]
-              </p>
-              <p>
-                <strong>Email :</strong> shop@hydroclic.fr
-              </p>
-              <p>
-                <strong>Téléphone :</strong> 06 88 56 44 85
-              </p>
-            </div>
-          </section>
+      <LegalSection title="2. Directeur de la publication">
+        <p>Le directeur de la publication est {COMPANY.publicationDirector}.</p>
+      </LegalSection>
 
-          {/* Directeur de publication */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              2. Directeur de publication
-            </h2>
-            <p className="text-gray-700">
-              Le directeur de la publication est le représentant légal de la société Hydroclic.
-            </p>
-          </section>
+      <LegalSection title="3. Hébergement">
+        <p>Le site est hébergé par :</p>
+        <ul className="space-y-1">
+          <li>
+            <strong>Hébergeur :</strong> {COMPANY.host.name}
+          </li>
+          <li>
+            <strong>Adresse :</strong> {COMPANY.host.address}
+          </li>
+          <li>
+            <strong>Site :</strong>{' '}
+            <a
+              href={COMPANY.host.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline underline-offset-2"
+            >
+              {COMPANY.host.url}
+            </a>
+          </li>
+        </ul>
+      </LegalSection>
 
-          {/* Hébergement */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              3. Hébergement
-            </h2>
-            <div className="text-gray-700 space-y-2">
-              <p>
-                <strong>Hébergeur :</strong> [Nom de l&apos;hébergeur à compléter]
-              </p>
-              <p>
-                <strong>Adresse :</strong> [Adresse de l&apos;hébergeur à compléter]
-              </p>
-              <p>
-                <strong>Téléphone :</strong> [Numéro à compléter]
-              </p>
-            </div>
-          </section>
+      <LegalSection title="4. Propriété intellectuelle">
+        <p>
+          L’ensemble du contenu de ce site (textes, images, logos, icônes, vidéos, bases de données,
+          etc.) est la propriété exclusive de {COMPANY.legalName}, sauf mention contraire.
+        </p>
+        <p>
+          Toute reproduction, représentation, modification, publication ou adaptation de tout ou
+          partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite
+          sans autorisation écrite préalable de {COMPANY.legalName}.
+        </p>
+        <p>
+          Toute exploitation non autorisée du site ou de son contenu engage la responsabilité civile
+          et/ou pénale de l’utilisateur.
+        </p>
+      </LegalSection>
 
-          {/* Propriété intellectuelle */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              4. Propriété intellectuelle
-            </h2>
-            <p className="text-gray-700 mb-2">
-              L&apos;ensemble du contenu de ce site (textes, images, logos, icônes, vidéos, etc.) est la propriété exclusive de Hydroclic, sauf mention contraire.
-            </p>
-            <p className="text-gray-700 mb-2">
-              Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable de Hydroclic.
-            </p>
-            <p className="text-gray-700">
-              Toute exploitation non autorisée du site ou de son contenu engage la responsabilité civile et/ou pénale de l&apos;utilisateur.
-            </p>
-          </section>
+      <LegalSection title="5. Protection des données personnelles">
+        <p>
+          Les données personnelles collectées sur ce site sont traitées conformément au Règlement
+          (UE) 2016/679 (RGPD) et à la loi « Informatique et Libertés » du 6 janvier 1978 modifiée.
+        </p>
+        <p>
+          Pour le détail des traitements, des durées de conservation et de vos droits, consultez
+          notre <LegalLink href={LEGAL_PATHS.privacy}>politique de confidentialité</LegalLink>.
+        </p>
+      </LegalSection>
 
-          {/* Protection des données */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              5. Protection des données personnelles
-            </h2>
-            <p className="text-gray-700 mb-2">
-              Conformément à la loi &quot; Informatique et Libertés &quot; du 6 janvier 1978 modifiée et au Règlement Général sur la Protection des Données (RGPD), vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et d&apos;opposition aux données personnelles vous concernant.
-            </p>
-            <p className="text-gray-700">
-              Pour exercer ces droits, vous pouvez nous contacter à l&apos;adresse : shop@hydroclic.fr
-            </p>
-            <p className="text-gray-700 mt-2">
-              Pour plus d&apos;informations, consultez notre{' '}
-              <a href="/politique-de-confidentialite" className="text-primary hover:underline">
-                Politique de confidentialité
-              </a>.
-            </p>
-          </section>
+      <LegalSection title="6. Cookies">
+        <p>
+          Le site dépose des cookies strictement nécessaires à son fonctionnement (compte,
+          panier, paiement, sécurité). Aucun cookie de mesure d’audience ou publicitaire n’est
+          déposé sans votre accord.
+        </p>
+        <p>
+          Vous pouvez consulter le détail et gérer vos choix dans notre{' '}
+          <LegalLink href={LEGAL_PATHS.cookies}>politique cookies</LegalLink>.
+        </p>
+      </LegalSection>
 
-          {/* Cookies */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              6. Cookies
-            </h2>
-            <p className="text-gray-700 mb-2">
-              Ce site utilise des cookies pour améliorer l&apos;expérience utilisateur et analyser le trafic du site.
-            </p>
-            <p className="text-gray-700">
-              En continuant à naviguer sur ce site, vous acceptez l&apos;utilisation de cookies conformément à notre politique de cookies.
-            </p>
-          </section>
+      <LegalSection title="7. Conditions de vente">
+        <p>
+          Les ventes conclues sur le site sont régies par les{' '}
+          <LegalLink href={LEGAL_PATHS.cgv}>conditions générales de vente</LegalLink>.
+        </p>
+      </LegalSection>
 
-          {/* Responsabilité */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              7. Limitation de responsabilité
-            </h2>
-            <p className="text-gray-700 mb-2">
-              Hydroclic s&apos;efforce d&apos;assurer l&apos;exactitude et la mise à jour des informations diffusées sur ce site, dont elle se réserve le droit de corriger, à tout moment et sans préavis, le contenu.
-            </p>
-            <p className="text-gray-700 mb-2">
-              Toutefois, Hydroclic ne peut garantir l&apos;exactitude, la précision ou l&apos;exhaustivité des informations mises à disposition sur ce site.
-            </p>
-            <p className="text-gray-700">
-              En conséquence, Hydroclic décline toute responsabilité pour tout dommage résultant d&apos;une intrusion d&apos;un tiers ayant entraîné une modification des informations mises à disposition sur le site ou empêchant l&apos;accès au site.
-            </p>
-          </section>
+      <LegalSection title="8. Limitation de responsabilité">
+        <p>
+          {COMPANY.legalName} s’efforce d’assurer l’exactitude et la mise à jour des informations
+          diffusées sur ce site, dont elle se réserve le droit de corriger le contenu à tout moment.
+        </p>
+        <p>
+          {COMPANY.legalName} ne peut toutefois garantir l’exactitude, la précision ou
+          l’exhaustivité des informations mises à disposition, ni la disponibilité ininterrompue du
+          site.
+        </p>
+      </LegalSection>
 
-          {/* Liens externes */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              8. Liens hypertextes
-            </h2>
-            <p className="text-gray-700 mb-2">
-              Le site peut contenir des liens hypertextes vers d&apos;autres sites présents sur le réseau Internet.
-            </p>
-            <p className="text-gray-700">
-              Les liens vers ces autres ressources vous font quitter le site Hydroclic. Il est possible de créer un lien vers la page de présentation de ce site sans autorisation expresse de l&pos;éditeur. Aucune autorisation ni demande d&pos;information préalable ne peut être exigée par l&pos;éditeur à l&pos;égard d&pos;un site qui souhaite établir un lien vers le site de l&pos;éditeur.
-            </p>
-          </section>
+      <LegalSection title="9. Liens hypertextes">
+        <p>
+          Le site peut contenir des liens vers d’autres sites. {COMPANY.legalName} n’exerce aucun
+          contrôle sur ces ressources externes et décline toute responsabilité quant à leur contenu
+          ou leur accessibilité.
+        </p>
+      </LegalSection>
 
-          {/* Droit applicable */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              9. Droit applicable
-            </h2>
-            <p className="text-gray-700">
-              Les présentes mentions légales sont régies par le droit français. En cas de litige et à défaut d&pos;accord amiable, le litige sera porté devant les tribunaux français conformément aux règles de compétence en vigueur.
-            </p>
-          </section>
+      <LegalSection title="10. Droit applicable">
+        <p>
+          Les présentes mentions légales sont régies par le droit français. En cas de litige et à
+          défaut d’accord amiable, les tribunaux français compétents seront saisis, sous réserve des
+          règles impératives de compétence applicables aux consommateurs.
+        </p>
+      </LegalSection>
 
-          {/* Contact */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              10. Contact
-            </h2>
-            <p className="text-gray-700">
-              Pour toute question concernant les présentes mentions légales, vous pouvez nous contacter à l&apos;adresse :{' '}
-              <a href="mailto:shop@hydroclic.fr" className="text-primary hover:underline">
-                shop@hydroclic.fr
-              </a>
-            </p>
-          </section>
+      <LegalSection title="11. Contact">
+        <p>
+          Pour toute question concernant ces mentions légales : <MailLink /> — {COMPANY.address.full}.
+        </p>
+      </LegalSection>
 
-          {/* Date de mise à jour */}
-          <div className="pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          </div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      <LegalUpdated />
+    </LegalPageShell>
   )
 }
-

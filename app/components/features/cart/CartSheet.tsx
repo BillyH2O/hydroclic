@@ -43,6 +43,7 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
   const { items, total, isLoading, updateQuantity, removeFromCart } = useCart()
   const accountType = useAccountType()
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('home')
+  const [acceptCgv, setAcceptCgv] = useState(false)
   const [shippingRules, setShippingRules] = useState<ShippingRules | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -320,10 +321,31 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
                   {formatPrice(total)}
                 </span>
               </div>
+              <label className="flex items-start gap-2 text-xs text-gray-600 leading-relaxed cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={acceptCgv}
+                  onChange={(e) => setAcceptCgv(e.target.checked)}
+                />
+                <span>
+                  J&apos;accepte les{' '}
+                  <a
+                    href="/conditions-generales-de-vente"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline"
+                  >
+                    conditions générales de vente
+                  </a>
+                  .
+                </span>
+              </label>
               <CheckoutButton
                 items={items}
                 className="w-full"
                 deliveryMethod={deliveryMethod}
+                disabled={!acceptCgv}
               />
             </div>
           )}
