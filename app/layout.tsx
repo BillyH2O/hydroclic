@@ -84,7 +84,7 @@ export default function RootLayout({
           {children}
           <CookieBanner />
           <WhatsAppFloat
-            phone={process.env.WHATSAPP_NUMBER ?? '+33688564485'}
+            phone={process.env.WHATSAPP_NUMBER ?? '+33611338778'}
           />
         </body>
       </html>

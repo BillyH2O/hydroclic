@@ -1,6 +1,7 @@
 'use client'
 
 import { Mail, Phone } from 'lucide-react'
+import { COMPANY } from '@/lib/legal/company'
 
 export default function ContactInfo() {
   return (
@@ -16,10 +17,10 @@ export default function ContactInfo() {
           <div>
             <p className="text-sm text-gray-600">Téléphone</p>
             <a
-              href="tel:+33688564485"
+              href={`tel:${COMPANY.phoneTel}`}
               className="text-base font-medium text-gray-900 hover:text-primary transition-colors"
             >
-              06 88 56 44 85
+              {COMPANY.phoneDisplay}
             </a>
           </div>
         </div>
@@ -29,9 +30,12 @@ export default function ContactInfo() {
           </div>
           <div>
             <p className="text-sm text-gray-600">Email</p>
-            <p className="text-base font-medium text-gray-900">
-            shop@hydroclic.fr
-            </p>
+            <a
+              href={`mailto:${COMPANY.email}`}
+              className="text-base font-medium text-gray-900 hover:text-primary transition-colors"
+            >
+              {COMPANY.email}
+            </a>
           </div>
         </div>
       </div>
